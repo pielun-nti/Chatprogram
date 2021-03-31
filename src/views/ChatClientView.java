@@ -1,0 +1,588 @@
+package views;
+
+import config.Env;
+import models.User;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+public class ChatClientView extends JFrame {
+    private JPanel mainPanel;
+    private JMenu menuOptions;
+    private JMenu menuSettings;
+    private JMenu menuPreferences;
+    private JMenu menuAbout;
+    private JMenuBar mainMenuBar;
+    private JMenuItem itemExitProgram;
+    private JMenuItem itemSelectReceiver;
+    private JMenuItem itemGetDeviceInfo;
+    private JMenuItem itemStartReceivingAccessibilityEvents;
+    private JMenuItem itemStopReceivingAccessibilityEvents;
+    private JMenuItem itemSetEditText;
+    private JMenuItem itemAppendEditText;
+    private JCheckBoxMenuItem itemKeepDeviceAwakeBackground;
+    private JCheckBoxMenuItem itemKeepDeviceAwakeThisWindowOnly;
+    private JMenuItem itemAbout;
+    public JTextPane txtLog;
+    private JScrollPane logjsp;
+    private Font myFont;
+    private Font itemFont;
+    private Font menuFont;
+    private final int WIDTH = 1200;
+    private final int HEIGHT = 800;
+    private int fontSize = 14;
+    User user;
+    boolean DontUseTextColors;
+    private JTextField txtMessage;
+    private JTextField txtServerPort;
+    private JTextField txtServerIP;
+    private JLabel labelServerIP;
+    private JLabel labelServerPort;
+    private JLabel labelMessage;
+    private JButton btnSendMessage;
+    private JButton btnConnectToServer;
+
+    public ChatClientView(User user){
+        this.user = user;
+        initComponents();
+        myFont = new Font("Verdana", Font.PLAIN, 13);
+        menuFont = new Font("Verdana", Font.BOLD, 20);
+        itemFont = new Font("Verdana", Font.BOLD, 16);
+        setStyles();
+        addComponents();
+        changeAllFont(mainPanel, myFont);
+        initKeystrokes();
+        initKeyListeners();
+        Dimension dim = new Dimension(WIDTH, HEIGHT);
+        setJMenuBar(mainMenuBar);
+        setSize(dim);
+        setPreferredSize(dim);
+        setContentPane(mainPanel);
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle(Env.ChatClientMessageBoxTitle + " - logged in as: " + user.getUsername());
+        setLocationRelativeTo(null);
+        pack();
+    }
+
+    /**
+     * Initializes all components in the JFrame
+     */
+    private void initComponents() {
+        mainPanel = new JPanel(null);
+        mainMenuBar = new JMenuBar();
+        itemExitProgram = new JMenuItem("Exit program");
+        itemSelectReceiver = new JMenuItem("Select Receiver For This GUI");
+        itemGetDeviceInfo = new JMenuItem("Get Device Info");
+        itemStartReceivingAccessibilityEvents = new JMenuItem("Start Receiving Accessibility Events");
+        itemStopReceivingAccessibilityEvents = new JMenuItem("Stop Receiving Accessibility Events");
+        itemSetEditText = new JMenuItem("Not implemented yet");
+        itemAppendEditText = new JMenuItem("Not implemented yet");
+        itemKeepDeviceAwakeBackground = new JCheckBoxMenuItem("Keep Device Awake Even When Minimized");
+        itemKeepDeviceAwakeThisWindowOnly = new JCheckBoxMenuItem("Keep Device Awake In Current Window Only");
+        txtLog= new JTextPane();
+        logjsp = new JScrollPane(txtLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);        itemAbout = new JMenuItem("About this program");
+        menuOptions = new JMenu("Options");
+        menuSettings = new JMenu("Settings");
+        menuPreferences = new JMenu("Preferences");
+        txtServerIP = new JTextField();
+        txtServerPort = new JTextField();
+        txtMessage = new JTextField();
+        labelServerIP = new JLabel("Server IP:");
+        labelServerPort = new JLabel("Server Port:");
+        labelMessage = new JLabel("Message:");
+        btnSendMessage = new JButton("Send Message");
+        btnConnectToServer = new JButton("Connect To Server");
+        menuAbout = new JMenu("About");
+    }
+
+    void setStyles(){
+        itemExitProgram.setFont(itemFont);
+        txtLog.setEditable(false);
+        itemSelectReceiver.setFont(itemFont);
+        itemSelectReceiver.setToolTipText("Click here to select receiver for this GUI");
+        itemGetDeviceInfo.setFont(itemFont);
+        itemGetDeviceInfo.setToolTipText("Click here to get device info");
+        itemStartReceivingAccessibilityEvents.setFont(itemFont);
+        itemStopReceivingAccessibilityEvents.setFont(itemFont);
+        itemSetEditText.setFont(itemFont);
+        itemAppendEditText.setFont(itemFont);
+        itemKeepDeviceAwakeBackground.setFont(itemFont);
+        itemKeepDeviceAwakeThisWindowOnly.setFont(itemFont);
+        itemAbout.setFont(itemFont);
+        menuOptions.setFont(menuFont);
+        menuSettings.setFont(menuFont);
+        menuPreferences.setFont(menuFont);
+        menuAbout.setFont(menuFont);
+        txtServerIP.setSelectedTextColor(Color.RED);
+        txtServerPort.setSelectedTextColor(Color.RED);
+        txtMessage.setSelectedTextColor(Color.RED);
+        txtServerIP.setToolTipText("Enter server ip address here");
+        txtServerPort.setToolTipText("Enter server port here");
+        txtMessage.setToolTipText("Enter message here");
+        btnSendMessage.setToolTipText("Click here to send message");
+        btnConnectToServer.setToolTipText("Click here to connect to server");
+        labelServerIP.setLocation(10, 520 + 60);
+        labelServerIP.setSize(100, 100);
+        txtServerIP.setLocation(80, 560 + 60);
+        txtServerIP.setSize(200, 20);
+        labelServerPort.setLocation(290, 520 + 60);
+        labelServerPort.setSize(100, 100);
+        txtServerPort.setLocation(370, 560 + 60);
+        txtServerPort.setSize(200, 20);
+        labelMessage.setLocation(10, 570 + 60);
+        labelMessage.setSize(100, 60);
+        txtMessage.setLocation(80, 590 + 60);
+        txtMessage.setSize(200, 20);
+        btnSendMessage.setLocation(5, 620 + 60);
+        btnSendMessage.setSize(300, 25);
+        btnConnectToServer.setLocation(310, 620 + 60);
+        btnConnectToServer.setSize(400, 25);
+        logjsp.setLocation(0, 0);
+        logjsp.setSize(1180, 600);
+        setFont(myFont);
+        changeAllFont(mainPanel, myFont);
+        changeAllButtonFont(mainPanel, myFont);
+    }
+
+
+    private void addComponents() {
+        menuOptions.add(itemExitProgram);
+        menuOptions.add(itemSelectReceiver);
+        menuOptions.add(itemGetDeviceInfo);
+        menuOptions.add(itemStartReceivingAccessibilityEvents);
+        menuOptions.add(itemStopReceivingAccessibilityEvents);
+        menuOptions.add(itemSetEditText);
+        menuOptions.add(itemAppendEditText);
+        menuOptions.add(itemKeepDeviceAwakeBackground);
+        menuOptions.add(itemKeepDeviceAwakeThisWindowOnly);
+        menuAbout.add(itemAbout);
+        mainMenuBar.add(menuOptions);
+        mainMenuBar.add(menuSettings);
+        mainMenuBar.add(menuPreferences);
+        mainMenuBar.add(menuAbout);
+        mainPanel.add(labelServerIP);
+        mainPanel.add(txtServerIP);
+        mainPanel.add(labelServerPort);
+        mainPanel.add(txtServerPort);
+        mainPanel.add(labelMessage);
+        mainPanel.add(txtMessage);
+        mainPanel.add(btnSendMessage);
+        mainPanel.add(btnConnectToServer);
+        mainPanel.add(logjsp);
+    }
+
+    public void addListeners(ActionListener listener){
+        itemAbout.addActionListener(listener);
+        itemGetDeviceInfo.addActionListener(listener);
+        itemStartReceivingAccessibilityEvents.addActionListener(listener);
+        itemStopReceivingAccessibilityEvents.addActionListener(listener);
+        itemSetEditText.addActionListener(listener);
+        itemAppendEditText.addActionListener(listener);
+        itemKeepDeviceAwakeBackground.addActionListener(listener);
+        itemKeepDeviceAwakeThisWindowOnly.addActionListener(listener);
+        itemExitProgram.addActionListener(listener);
+        itemSelectReceiver.addActionListener(listener);
+        btnSendMessage.addActionListener(listener);
+        btnConnectToServer.addActionListener(listener);
+    }
+
+    public void addFrameWindowListener(WindowListener listener){
+        addWindowListener(listener);
+    }
+
+
+    public void displayErrorMsg(String msg) {
+        JOptionPane.showMessageDialog(this, msg, Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    /**
+     * Changes all JButton fonts
+     */
+    private void changeAllButtonFont(Container c, Font f) {
+        for (Component comp : c.getComponents()) {
+            if (comp instanceof JButton) {
+                ((JButton)comp).setFont(f);
+            }
+        }
+    }
+
+    void initKeyListeners(){
+        txtMessage.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnSendMessage.doClick();
+                }
+            }
+        });
+        txtServerIP.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    txtServerPort.requestFocus();
+                }
+            }
+        });
+        txtServerPort.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    txtMessage.requestFocus();
+                }
+            }
+        });
+    }
+
+    /**
+     * Initializes Keystrokes
+     */
+    private void initKeystrokes() {
+        itemSelectReceiver.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        itemExitProgram.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_0, java.awt.event.InputEvent.CTRL_MASK));
+    }
+
+    /**
+     * Custom resize bufferedimage solution
+     * @param image
+     * @param width
+     * @param height
+     * @return
+     */
+    public BufferedImage resize(BufferedImage image, int width, int height) {
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
+        Graphics2D g2d = (Graphics2D) bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+        return bi;
+    }
+
+    /**
+     * Appends text to a JTextPane with color, font, styling and different content types support
+     */
+    public void appendToPane(JTextPane tp, String msg, String c)
+    {
+        if (!DontUseTextColors) {
+            //StyleContext sc = StyleContext.getDefaultStyleContext();
+            tp.setContentType("text/html");
+            HTMLDocument doc = (HTMLDocument)tp.getDocument();
+            HTMLEditorKit editorKit = (HTMLEditorKit)tp.getEditorKit();
+
+            if (tp.getText().equals("")) {
+                //tp.setText(msg);
+                try {
+                    msg = msg.replace("\n", "<br>");
+                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+
+            } else {
+                try {
+                    msg = msg.replace("\n", "<br>");
+                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                } catch (BadLocationException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        else {
+            tp.setContentType("text/plain");
+            if (tp.getText().equals("")) {
+                tp.setText(msg);
+            } else {
+                tp.setText(tp.getText() + "\n" + msg);
+            }
+        }
+    }
+
+
+    /**
+     * Changes all Fonts in container
+     */
+    public static void changeAllFont ( Component component, Font font )
+    {
+        component.setFont ( font );
+        if ( component instanceof Container )
+        {
+            for ( Component child : ( ( Container ) component ).getComponents () )
+            {
+                changeAllFont ( child, font );
+            }
+        }
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
+    public void setMainPanel(JPanel mainPanel) {
+        this.mainPanel = mainPanel;
+    }
+
+    public JMenu getMenuOptions() {
+        return menuOptions;
+    }
+
+    public void setMenuOptions(JMenu menuOptions) {
+        this.menuOptions = menuOptions;
+    }
+
+    public JMenu getMenuSettings() {
+        return menuSettings;
+    }
+
+    public void setMenuSettings(JMenu menuSettings) {
+        this.menuSettings = menuSettings;
+    }
+
+    public JMenu getMenuPreferences() {
+        return menuPreferences;
+    }
+
+    public void setMenuPreferences(JMenu menuPreferences) {
+        this.menuPreferences = menuPreferences;
+    }
+
+    public JMenu getMenuAbout() {
+        return menuAbout;
+    }
+
+    public void setMenuAbout(JMenu menuAbout) {
+        this.menuAbout = menuAbout;
+    }
+
+    public JMenuBar getMainMenuBar() {
+        return mainMenuBar;
+    }
+
+    public void setMainMenuBar(JMenuBar mainMenuBar) {
+        this.mainMenuBar = mainMenuBar;
+    }
+
+    public JMenuItem getItemExitProgram() {
+        return itemExitProgram;
+    }
+
+    public void setItemExitProgram(JMenuItem itemExitProgram) {
+        this.itemExitProgram = itemExitProgram;
+    }
+
+    public JMenuItem getItemSelectReceiver() {
+        return itemSelectReceiver;
+    }
+
+    public void setItemSelectReceiver(JMenuItem itemSelectReceiver) {
+        this.itemSelectReceiver = itemSelectReceiver;
+    }
+
+    public JMenuItem getItemGetDeviceInfo() {
+        return itemGetDeviceInfo;
+    }
+
+    public void setItemGetDeviceInfo(JMenuItem itemGetDeviceInfo) {
+        this.itemGetDeviceInfo = itemGetDeviceInfo;
+    }
+
+    public JMenuItem getItemStartReceivingAccessibilityEvents() {
+        return itemStartReceivingAccessibilityEvents;
+    }
+
+    public void setItemStartReceivingAccessibilityEvents(JMenuItem itemStartReceivingAccessibilityEvents) {
+        this.itemStartReceivingAccessibilityEvents = itemStartReceivingAccessibilityEvents;
+    }
+
+    public JMenuItem getItemStopReceivingAccessibilityEvents() {
+        return itemStopReceivingAccessibilityEvents;
+    }
+
+    public void setItemStopReceivingAccessibilityEvents(JMenuItem itemStopReceivingAccessibilityEvents) {
+        this.itemStopReceivingAccessibilityEvents = itemStopReceivingAccessibilityEvents;
+    }
+
+    public JMenuItem getItemSetEditText() {
+        return itemSetEditText;
+    }
+
+    public void setItemSetEditText(JMenuItem itemSetEditText) {
+        this.itemSetEditText = itemSetEditText;
+    }
+
+    public JMenuItem getItemAppendEditText() {
+        return itemAppendEditText;
+    }
+
+    public void setItemAppendEditText(JMenuItem itemAppendEditText) {
+        this.itemAppendEditText = itemAppendEditText;
+    }
+
+    public JCheckBoxMenuItem getItemKeepDeviceAwakeBackground() {
+        return itemKeepDeviceAwakeBackground;
+    }
+
+    public void setItemKeepDeviceAwakeBackground(JCheckBoxMenuItem itemKeepDeviceAwakeBackground) {
+        this.itemKeepDeviceAwakeBackground = itemKeepDeviceAwakeBackground;
+    }
+
+    public JCheckBoxMenuItem getItemKeepDeviceAwakeThisWindowOnly() {
+        return itemKeepDeviceAwakeThisWindowOnly;
+    }
+
+    public void setItemKeepDeviceAwakeThisWindowOnly(JCheckBoxMenuItem itemKeepDeviceAwakeThisWindowOnly) {
+        this.itemKeepDeviceAwakeThisWindowOnly = itemKeepDeviceAwakeThisWindowOnly;
+    }
+
+    public JMenuItem getItemAbout() {
+        return itemAbout;
+    }
+
+    public void setItemAbout(JMenuItem itemAbout) {
+        this.itemAbout = itemAbout;
+    }
+
+    public JTextPane getTxtLog() {
+        return txtLog;
+    }
+
+    public void setTxtLog(JTextPane txtLog) {
+        this.txtLog = txtLog;
+    }
+
+    public JScrollPane getLogjsp() {
+        return logjsp;
+    }
+
+    public void setLogjsp(JScrollPane logjsp) {
+        this.logjsp = logjsp;
+    }
+
+    public Font getMyFont() {
+        return myFont;
+    }
+
+    public void setMyFont(Font myFont) {
+        this.myFont = myFont;
+    }
+
+    public Font getItemFont() {
+        return itemFont;
+    }
+
+    public void setItemFont(Font itemFont) {
+        this.itemFont = itemFont;
+    }
+
+    public Font getMenuFont() {
+        return menuFont;
+    }
+
+    public void setMenuFont(Font menuFont) {
+        this.menuFont = menuFont;
+    }
+
+    public int getWIDTH() {
+        return WIDTH;
+    }
+
+    public int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public int getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(int fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public boolean isDontUseTextColors() {
+        return DontUseTextColors;
+    }
+
+    public void setDontUseTextColors(boolean dontUseTextColors) {
+        DontUseTextColors = dontUseTextColors;
+    }
+
+    public JTextField getTxtMessage() {
+        return txtMessage;
+    }
+
+    public void setTxtMessage(JTextField txtMessage) {
+        this.txtMessage = txtMessage;
+    }
+
+    public JTextField getTxtServerPort() {
+        return txtServerPort;
+    }
+
+    public void setTxtServerPort(JTextField txtServerPort) {
+        this.txtServerPort = txtServerPort;
+    }
+
+    public JTextField getTxtServerIP() {
+        return txtServerIP;
+    }
+
+    public void setTxtServerIP(JTextField txtServerIP) {
+        this.txtServerIP = txtServerIP;
+    }
+
+    public JLabel getLabelServerIP() {
+        return labelServerIP;
+    }
+
+    public void setLabelServerIP(JLabel labelServerIP) {
+        this.labelServerIP = labelServerIP;
+    }
+
+    public JLabel getLabelServerPort() {
+        return labelServerPort;
+    }
+
+    public void setLabelServerPort(JLabel labelServerPort) {
+        this.labelServerPort = labelServerPort;
+    }
+
+    public JLabel getLabelMessage() {
+        return labelMessage;
+    }
+
+    public void setLabelMessage(JLabel labelMessage) {
+        this.labelMessage = labelMessage;
+    }
+
+    public JButton getBtnSendMessage() {
+        return btnSendMessage;
+    }
+
+    public void setBtnSendMessage(JButton btnSendMessage) {
+        this.btnSendMessage = btnSendMessage;
+    }
+
+    public JButton getBtnConnectToServer() {
+        return btnConnectToServer;
+    }
+
+    public void setBtnConnectToServer(JButton btnConnectToServer) {
+        this.btnConnectToServer = btnConnectToServer;
+    }
+}
