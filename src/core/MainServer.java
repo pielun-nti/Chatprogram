@@ -10,8 +10,16 @@ import views.ChatServerView;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * MainServer class that starts the chat server.
+ */
 public class MainServer {
     static ChatServer chatServer;
+
+    /**
+     * Starts the chat server mvc after connecting to database. If using windows try and set that look and feel.
+     * @param args
+     */
     public static void main(String[] args){
         EventQueue.invokeLater(new Runnable() {
             @Override
