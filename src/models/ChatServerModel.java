@@ -111,6 +111,12 @@ public class ChatServerModel {
 
     }
 
+    /**
+     * Forward message to specific client (filter by username). Loops through receivers arraylist and sends
+     * to the receiver/client that's username equals username argument.
+     * @param msg Message to send
+     * @param username Username to send message to
+     */
     public void forwardMessageToSpecific(String msg, String username) {
         for (int i = 0; i < receiversConnected.size(); i++) {
             try {

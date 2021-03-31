@@ -53,6 +53,10 @@ public class ChatClientModel {
         }
     }
 
+    /**
+     * Sends message to specific client. Ask for username to send to input and message input and then
+     * sends to server a message that the server understands and forwards the specified message to the specified username.
+     */
     public void sendMessageToSpecific() {
         try {
             if (socket == null){
@@ -114,6 +118,9 @@ public class ChatClientModel {
         }
     }
 
+    /**
+     * Sends username to server so the server directly know which username each client has.
+     */
     public void sendUsernameToServer() {
         try {
             if (socket == null){

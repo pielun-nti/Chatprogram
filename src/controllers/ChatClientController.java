@@ -106,6 +106,9 @@ public class ChatClientController {
         }
     }
 
+    /**
+     * Send message to specific client
+     */
     void sendMessageToSpecific(){
         model.sendMessageToSpecific();
     }

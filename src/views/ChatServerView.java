@@ -70,7 +70,7 @@ public class ChatServerView extends JFrame {
         mainPanel = new JPanel(new BorderLayout());
         mainMenuBar = new JMenuBar();
         itemExitProgram = new JMenuItem("Exit program");
-        itemSelectReceiver = new JMenuItem("Select Receiver");
+        itemSelectReceiver = new JMenuItem("Not implemented yet");
         itemStartChatServer = new JMenuItem("Start Chat Server");
         itemStopChatServer = new JMenuItem("Stop Chat Server");
         itemDisconnectClient = new JMenuItem("Kick a client (specify ID or ip)");
@@ -109,7 +109,7 @@ public class ChatServerView extends JFrame {
 
     private void addComponents() {
         menuOptions.add(itemExitProgram);
-        menuOptions.add(itemSelectReceiver);
+        //menuOptions.add(itemSelectReceiver);
         menuOptions.add(itemStartChatServer);
         menuOptions.add(itemStopChatServer);
         menuOptions.add(itemDisconnectClient);
