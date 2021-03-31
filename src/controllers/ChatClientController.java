@@ -11,11 +11,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/**
+ * ChatClientController is the class that controls the client model and view.
+ */
 public class ChatClientController {
     ChatClientModel model;
     ChatClientView view;
     User user;
     ChatClientController chatClientController;
+
+    /**
+     * ChatClientController constructor
+     * @param model The client model
+     * @param view Client view
+     * @param user User
+     */
     public ChatClientController(ChatClientModel model, ChatClientView view, User user){
         this.model = model;
         this.view = view;
@@ -27,6 +37,10 @@ public class ChatClientController {
         view.getTxtServerIP().setText("127.0.0.1");
         view.getTxtServerPort().setText("5900");
     }
+
+    /**
+     * FrameWindowListener listens for window events like windowclosing.
+     */
     private class FrameWindowListener implements WindowListener {
 
         @Override
@@ -66,6 +80,9 @@ public class ChatClientController {
         }
     }
 
+    /**
+     * ChatClientListener listens for jmenuitems clicks.
+     */
     private class ChatClientListener implements ActionListener {
 
         @Override
@@ -85,6 +102,10 @@ public class ChatClientController {
             }
         }
     }
+
+    /**
+     * Tells the client model to send message to all other clients and also the server.
+     */
     void sendMessageToAll(){
         String msg = view.getTxtMessage().getText().trim();
         if (msg.equalsIgnoreCase("")){
@@ -93,6 +114,10 @@ public class ChatClientController {
         model.sendMessageToAll(msg);
         view.getTxtMessage().setText("");
     }
+
+    /**
+     * Ask user for port and tells model to try connect to the server.
+     */
     void connectToServer(){
         String ip = view.getTxtServerIP().getText().trim();
         if (ip.equalsIgnoreCase("") || !ip.contains(".") & !ip.equalsIgnoreCase("localhost")){
@@ -112,6 +137,12 @@ public class ChatClientController {
 
 
     }
+
+    /**
+     * Append text to jtextarea on client view with text colors.
+     * @param msg Text to display on jtextarea
+     * @param color The text color
+     */
     public void appendToPane(String msg, String color){
         view.appendToPane(view.txtLog, msg, color);
     }

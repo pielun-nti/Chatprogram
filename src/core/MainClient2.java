@@ -9,6 +9,10 @@ import views.LoginView;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Another client class identical to test that the server handles multi thread correct and can handle multiple clients
+ * at the same time.
+ */
 public class MainClient2 {
     public static void main(String[] args){
         EventQueue.invokeLater(new Runnable() {

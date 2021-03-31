@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Date;
 
+/**
+ * ChatServerMainReceiver is a thread that listens for received messages from any client.
+ */
 public class ChatServerMainReceiver extends Thread {
     ChatServerController chatServerController;
     Socket socket;
@@ -17,6 +20,13 @@ public class ChatServerMainReceiver extends Thread {
     int ID;
     String username;
     String country;
+
+    /**
+     * Constructor
+     * @param ID The id of this receiver
+     * @param socket The socket that is what we communicate with
+     * @param chatServerController The server controller
+     */
     public ChatServerMainReceiver(int ID, Socket socket, ChatServerController chatServerController) {
         this.ID = ID;
         this.socket = socket;
@@ -49,6 +59,13 @@ public class ChatServerMainReceiver extends Thread {
     }
 
 
+    /**
+     * The server main receiver thread runs method reads socket inputstream using inputstreamreader and then
+     * converts to bufferedreader and then while socket is not closed, it will read incoming message from the socket inputstream
+     * using readFromStream method (and that text will be in hex because client sends it in hex), so then it
+     * converts it to string using hexToString method and then it splits the string and displays username and message
+     * in a gui.
+     */
     @Override
     public void run() {
         try {

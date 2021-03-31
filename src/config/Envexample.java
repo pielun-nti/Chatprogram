@@ -1,5 +1,8 @@
 package config;
 
+/**
+ * Change these variables as you like.
+ */
 public class Envexample {
     public static String dbName = "chatprogram";
     public static String driverName ="com.mysql.cj.jdbc.Driver";

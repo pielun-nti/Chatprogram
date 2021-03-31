@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
+/**
+ * Test connect & send a message to the server and print response.
+ */
 public class TestSendToServer {
     public static void main(String[] args){
         System.setProperty("javax.net.ssl.keyStore", Env.SSLKeyStore);

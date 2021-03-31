@@ -12,7 +12,14 @@ import views.LoginView;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class to start the client java application.
+ */
 public class MainClient {
+    /**
+     * Starts the client java application, first connecting to database and showing login gui.
+     * @param args
+     */
     public static void main(String[] args){
         EventQueue.invokeLater(new Runnable() {
             @Override

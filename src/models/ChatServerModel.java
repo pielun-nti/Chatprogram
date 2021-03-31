@@ -9,6 +9,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
+/**
+ * Chatservermodel is a class that does the network things mostly.
+ */
 public class ChatServerModel {
     ChatServerMainReceiver chatMainReceiver;
     ServerSocket ss;
@@ -25,6 +28,10 @@ public class ChatServerModel {
         this.chatServerController = chatServerController;
     }
 
+    /**
+     * Starts the main chat server.
+     * @return
+     */
     public boolean startChatServer(){
         try {
             if (chatServer != null) {
@@ -83,6 +90,11 @@ public class ChatServerModel {
         this.receiversConnected = receiversConnected;
     }
 
+    /**
+     * Forwards message to all clients except the client id that sent the message.
+     * @param msg The message to forward
+     * @param ID Exception id of client
+     */
     public void forwardMessageToAllClients(String msg, int ID) {
 
         for (int i = 0; i < receiversConnected.size(); i++) {

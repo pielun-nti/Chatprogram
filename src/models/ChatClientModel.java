@@ -11,18 +11,31 @@ import java.io.PrintWriter;
 import java.security.KeyStore;
 import java.util.Date;
 
+/**
+ * ChatClientModel class is used to do the network stuff in etc. It doesnt interact with the client view
+ * directly but can use client controller to interact with view if needed.
+ */
 public class ChatClientModel {
     SSLSocket socket;
     PassUtil passUtil;
     User user;
     ChatClientController chatClientController;
+
+    /**
+     * Constructor
+     * @param user The user
+     */
     public ChatClientModel(User user) {
         passUtil = new PassUtil();
         this.user = user;
 
     }
 
-
+    /**
+     * Send message & username to all other clients and server (but this method only does send to the server
+     * and then the server forwards the message to rest clients)
+     * @param msg The message to send
+     */
     public void sendMessageToAll(String msg) {
         try {
             if (socket == null){
@@ -39,6 +52,11 @@ public class ChatClientModel {
         }
     }
 
+    /**
+     * Connects to server.
+     * @param ip Server ip
+     * @param port Server port
+     */
     public void connectToServer(String ip, int port){
         System.setProperty("javax.net.ssl.keyStore", Env.SSLKeyStore);
         System.setProperty("javax.net.ssl.keyStorePassword", Env.SSLKeyStorePass);

@@ -9,10 +9,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+/**
+ * ChatServerController controls the server model and view.
+ */
 public class ChatServerController {
     ChatServerModel model;
     ChatServerView view;
     ChatServerController chatServerController;
+
+    /**
+     * ChatServerController Constructor.
+     * @param model The chat server model
+     * @param view The chat server view
+     */
     public ChatServerController(ChatServerModel model, ChatServerView view){
         this.model = model;
         this.view = view;
@@ -21,6 +30,10 @@ public class ChatServerController {
         this.view.addListeners(new ChatServerListener());
         this.view.addFrameWindowListener(new FrameWindowListener());
     }
+
+    /**
+     * FrameWindowListener that listens for window events like windowclosing.
+     */
     private class FrameWindowListener implements WindowListener {
 
         @Override
@@ -60,6 +73,9 @@ public class ChatServerController {
         }
     }
 
+    /**
+     * ChatServerListener listens for jmenuitems clicks.
+     */
     private class ChatServerListener implements ActionListener {
 
         @Override
@@ -77,6 +93,9 @@ public class ChatServerController {
         }
     }
 
+    /**
+     * Tells model to start the chat server.
+     */
     void startChatServer(){
         model.startChatServer();
     }
@@ -85,6 +104,11 @@ public class ChatServerController {
         return model;
     }
 
+    /**
+     * Tells the server view to append text to jtextarea with text color.
+     * @param msg Text to add
+     * @param color Text color
+     */
     public void appendToPane(String msg, String color){
         view.appendToPane(view.txtLog, msg, color);
     }

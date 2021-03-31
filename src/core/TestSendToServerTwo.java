@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.security.KeyStore;
-
+/**
+ * Almost identical test connect & send a message to the server and print response.
+ */
 public class TestSendToServerTwo {
     public static void main(String[] args){
         System.setProperty("javax.net.ssl.keyStore", Env.SSLKeyStore);

@@ -10,6 +10,7 @@ import views.RegisterView;
 
 import java.awt.event.*;
 
+
 public class LoginController {
     LoginView view;
     LoginModel model;

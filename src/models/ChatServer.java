@@ -8,16 +8,31 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The chatserver is a thread that listens for new client connections and then creates a new thread
+ * for each client and also keeps count of the clients connected and add them to arraylist.
+ */
 public class ChatServer extends Thread {
     int serverPort;
     int maxClientsReached = 0;
     ChatServerController chatServerController;
     boolean running;
+
+    /**
+     * Chatserver constructor.
+     * @param serverPort The server port
+     * @param chatServerController The server controller
+     */
     public ChatServer(int serverPort, ChatServerController chatServerController){
         this.serverPort = serverPort;
         this.chatServerController = chatServerController;
     }
 
+    /**
+     * The chat server threads run method will keep accepting clients in an infinite loop as long as
+     * the max client limit is not reached. For each client it will create new thread and add the client
+     * to an arraylist and increase the clients connected variable.
+     */
     @Override
     public void run() {
         try {
