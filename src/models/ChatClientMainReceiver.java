@@ -78,6 +78,16 @@ public class ChatClientMainReceiver extends Thread {
                     continue;
                 }
                 clientIP = socket.getInetAddress().getHostAddress();
+                if (message.startsWith("msgspecific|split|")){
+                    String[] data = message.split("\\|split\\|");
+                    String from = data[2];
+                    username = data[1];
+                    String msg = data[3];
+                    System.err.println("RECEIVED SPECIFIC: " + new Date(System.currentTimeMillis()) + ": from:  " + from + ": to: " + username + ": " + msg);
+                    if (chatClientController != null) {
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": from:" + from + ": to: You (" + username + "): " + msg, Env.messageColor);
+                    }
+                }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
                     username = data[1];

@@ -82,6 +82,23 @@ public class ChatServerMainReceiver extends Thread {
                     continue;
                 }
                 clientIP = socket.getInetAddress().getHostAddress();
+                if (message.startsWith("setusername|split|")){
+                    String[] data = message.split("\\|split\\|");
+                    username = data[1];
+                    System.out.println("Set username: " + username);
+                }
+                if (message.startsWith("msgspecific|split|")){
+                    String[] data = message.split("\\|split\\|");
+                    String usernameSendTo = data[1];
+                    username = data[2];
+                    String msg = data[3];
+                    System.out.println("SPECIFIC RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
+                    chatServerController.getModel().forwardMessageToSpecific("msgspecific|split|" + usernameSendTo + "|split|" + username + "|split|" + msg, usernameSendTo);
+                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor);
+                    //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
+                    //send the last 10 msgs from server to each new client connected?
+                    //Do this if i have time over
+                }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
                     username = data[1];

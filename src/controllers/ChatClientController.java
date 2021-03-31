@@ -93,7 +93,10 @@ public class ChatClientController {
                 if (command.equalsIgnoreCase("Connect To Server")){
                     connectToServer();
                 }
-                if (command.equalsIgnoreCase("Send Message")){
+                if (command.equalsIgnoreCase("Send Message To Specific Client")){
+                    sendMessageToSpecific();
+                }
+                if (command.equalsIgnoreCase("Send Message To All")){
                     sendMessageToAll();
                 }
                 if (command.equalsIgnoreCase("Exit program")){
@@ -101,6 +104,10 @@ public class ChatClientController {
                 }
             }
         }
+    }
+
+    void sendMessageToSpecific(){
+        model.sendMessageToSpecific();
     }
 
     /**

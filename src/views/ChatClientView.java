@@ -21,8 +21,8 @@ public class ChatClientView extends JFrame {
     private JMenu menuAbout;
     private JMenuBar mainMenuBar;
     private JMenuItem itemExitProgram;
+    private JMenuItem itemSendMsgSpecificClient;
     private JMenuItem itemSelectReceiver;
-    private JMenuItem itemGetDeviceInfo;
     private JMenuItem itemStartReceivingAccessibilityEvents;
     private JMenuItem itemStopReceivingAccessibilityEvents;
     private JMenuItem itemSetEditText;
@@ -79,14 +79,14 @@ public class ChatClientView extends JFrame {
         mainPanel = new JPanel(null);
         mainMenuBar = new JMenuBar();
         itemExitProgram = new JMenuItem("Exit program");
-        itemSelectReceiver = new JMenuItem("Select Receiver For This GUI");
-        itemGetDeviceInfo = new JMenuItem("Get Device Info");
-        itemStartReceivingAccessibilityEvents = new JMenuItem("Start Receiving Accessibility Events");
-        itemStopReceivingAccessibilityEvents = new JMenuItem("Stop Receiving Accessibility Events");
+        itemSendMsgSpecificClient = new JMenuItem("Send Message To Specific Client");
+        itemSelectReceiver = new JMenuItem("Not implemented yet");
+        itemStartReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
+        itemStopReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
         itemSetEditText = new JMenuItem("Not implemented yet");
         itemAppendEditText = new JMenuItem("Not implemented yet");
-        itemKeepDeviceAwakeBackground = new JCheckBoxMenuItem("Keep Device Awake Even When Minimized");
-        itemKeepDeviceAwakeThisWindowOnly = new JCheckBoxMenuItem("Keep Device Awake In Current Window Only");
+        itemKeepDeviceAwakeBackground = new JCheckBoxMenuItem("Not implemented yet");
+        itemKeepDeviceAwakeThisWindowOnly = new JCheckBoxMenuItem("Not implemented");
         txtLog= new JTextPane();
         logjsp = new JScrollPane(txtLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);        itemAbout = new JMenuItem("About this program");
         menuOptions = new JMenu("Options");
@@ -98,7 +98,7 @@ public class ChatClientView extends JFrame {
         labelServerIP = new JLabel("Server IP:");
         labelServerPort = new JLabel("Server Port:");
         labelMessage = new JLabel("Message:");
-        btnSendMessage = new JButton("Send Message");
+        btnSendMessage = new JButton("Send Message To All");
         btnConnectToServer = new JButton("Connect To Server");
         menuAbout = new JMenu("About");
     }
@@ -106,10 +106,10 @@ public class ChatClientView extends JFrame {
     void setStyles(){
         itemExitProgram.setFont(itemFont);
         txtLog.setEditable(false);
+        itemSendMsgSpecificClient.setFont(itemFont);
+        itemSendMsgSpecificClient.setToolTipText("Click here to send message to specific client");
         itemSelectReceiver.setFont(itemFont);
-        itemSelectReceiver.setToolTipText("Click here to select receiver for this GUI");
-        itemGetDeviceInfo.setFont(itemFont);
-        itemGetDeviceInfo.setToolTipText("Click here to get device info");
+        itemSelectReceiver.setToolTipText("Click here to select receiver");
         itemStartReceivingAccessibilityEvents.setFont(itemFont);
         itemStopReceivingAccessibilityEvents.setFont(itemFont);
         itemSetEditText.setFont(itemFont);
@@ -155,14 +155,14 @@ public class ChatClientView extends JFrame {
 
     private void addComponents() {
         menuOptions.add(itemExitProgram);
+        menuOptions.add(itemSendMsgSpecificClient);
         menuOptions.add(itemSelectReceiver);
-        menuOptions.add(itemGetDeviceInfo);
-        menuOptions.add(itemStartReceivingAccessibilityEvents);
-        menuOptions.add(itemStopReceivingAccessibilityEvents);
-        menuOptions.add(itemSetEditText);
-        menuOptions.add(itemAppendEditText);
-        menuOptions.add(itemKeepDeviceAwakeBackground);
-        menuOptions.add(itemKeepDeviceAwakeThisWindowOnly);
+        //menuOptions.add(itemStartReceivingAccessibilityEvents);
+        //menuOptions.add(itemStopReceivingAccessibilityEvents);
+        //menuOptions.add(itemSetEditText);
+        //menuOptions.add(itemAppendEditText);
+        //menuOptions.add(itemKeepDeviceAwakeBackground);
+        //menuOptions.add(itemKeepDeviceAwakeThisWindowOnly);
         menuAbout.add(itemAbout);
         mainMenuBar.add(menuOptions);
         mainMenuBar.add(menuSettings);
@@ -181,7 +181,7 @@ public class ChatClientView extends JFrame {
 
     public void addListeners(ActionListener listener){
         itemAbout.addActionListener(listener);
-        itemGetDeviceInfo.addActionListener(listener);
+        itemSelectReceiver.addActionListener(listener);
         itemStartReceivingAccessibilityEvents.addActionListener(listener);
         itemStopReceivingAccessibilityEvents.addActionListener(listener);
         itemSetEditText.addActionListener(listener);
@@ -189,7 +189,7 @@ public class ChatClientView extends JFrame {
         itemKeepDeviceAwakeBackground.addActionListener(listener);
         itemKeepDeviceAwakeThisWindowOnly.addActionListener(listener);
         itemExitProgram.addActionListener(listener);
-        itemSelectReceiver.addActionListener(listener);
+        itemSendMsgSpecificClient.addActionListener(listener);
         btnSendMessage.addActionListener(listener);
         btnConnectToServer.addActionListener(listener);
     }
@@ -243,7 +243,7 @@ public class ChatClientView extends JFrame {
      * Initializes Keystrokes
      */
     private void initKeystrokes() {
-        itemSelectReceiver.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        itemSendMsgSpecificClient.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         itemExitProgram.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_0, java.awt.event.InputEvent.CTRL_MASK));
     }
 
@@ -378,20 +378,20 @@ public class ChatClientView extends JFrame {
         this.itemExitProgram = itemExitProgram;
     }
 
-    public JMenuItem getItemSelectReceiver() {
+    public JMenuItem getitemSendMsgSpecificClient() {
+        return itemSendMsgSpecificClient;
+    }
+
+    public void setitemSendMsgSpecificClient(JMenuItem itemSendMsgSpecificClient) {
+        this.itemSendMsgSpecificClient = itemSendMsgSpecificClient;
+    }
+
+    public JMenuItem getitemSelectReceiver() {
         return itemSelectReceiver;
     }
 
-    public void setItemSelectReceiver(JMenuItem itemSelectReceiver) {
+    public void setitemSelectReceiver(JMenuItem itemSelectReceiver) {
         this.itemSelectReceiver = itemSelectReceiver;
-    }
-
-    public JMenuItem getItemGetDeviceInfo() {
-        return itemGetDeviceInfo;
-    }
-
-    public void setItemGetDeviceInfo(JMenuItem itemGetDeviceInfo) {
-        this.itemGetDeviceInfo = itemGetDeviceInfo;
     }
 
     public JMenuItem getItemStartReceivingAccessibilityEvents() {

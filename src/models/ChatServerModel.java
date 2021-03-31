@@ -110,4 +110,18 @@ public class ChatServerModel {
         }
 
     }
+
+    public void forwardMessageToSpecific(String msg, String username) {
+        for (int i = 0; i < receiversConnected.size(); i++) {
+            try {
+                if (receiversConnected.get(i).username.equals(username)) { //send to specific client
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(receiversConnected.get(i).socket.getOutputStream(), "UTF-8"), true);
+                    writer.println(passUtil.toHexString(msg));
+                    writer.flush();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }

@@ -20,6 +20,7 @@ public class ChatClientModel {
     PassUtil passUtil;
     User user;
     ChatClientController chatClientController;
+    ChatClientMainReceiver chatClientMainReceiver;
 
     /**
      * Constructor
@@ -52,12 +53,38 @@ public class ChatClientModel {
         }
     }
 
+    public void sendMessageToSpecific() {
+        try {
+            if (socket == null){
+                JOptionPane.showMessageDialog(null, "SSLSocket is not connected to server. Connect before sending message.",Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String usernameSendTo = JOptionPane.showInputDialog(null, "Enter username to send message to");
+            String msg = JOptionPane.showInputDialog(null, "Enter message to send to client with username: " + usernameSendTo);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+            writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
+            writer.flush();
+            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg , "BLUE");
+        } catch (Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error sending message: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * Connects to server.
      * @param ip Server ip
      * @param port Server port
      */
     public void connectToServer(String ip, int port){
+        if (chatClientMainReceiver != null) {
+            if (chatClientMainReceiver.socket != null) {
+                if (!chatClientMainReceiver.socket.isClosed()) {
+                    JOptionPane.showMessageDialog(null, "You are already connected to the server.", Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
         System.setProperty("javax.net.ssl.keyStore", Env.SSLKeyStore);
         System.setProperty("javax.net.ssl.keyStorePassword", Env.SSLKeyStorePass);
         try {
@@ -77,14 +104,29 @@ public class ChatClientModel {
             final SSLSocketFactory factory = context.getSocketFactory();
 
             socket = ((SSLSocket) factory.createSocket(ip, port));
-
-            ChatClientMainReceiver chatClientMainReceiver = new ChatClientMainReceiver(socket, chatClientController);
+            chatClientMainReceiver = new ChatClientMainReceiver(socket, chatClientController);
             chatClientMainReceiver.start();
             chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Connected to server " + ip + ":" + port , "GREEN");
-
+            sendUsernameToServer();
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error connecting to server " + ip + ":" + port + ": " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void sendUsernameToServer() {
+        try {
+            if (socket == null){
+                JOptionPane.showMessageDialog(null, "SSLSocket is not connected to server. Connect before sending username.",Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+            writer.println(passUtil.toHexString("setusername|split|" + user.getUsername()));
+            writer.flush();
+            System.out.println("Sent username to server");
+        } catch (Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error sending username: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -119,4 +161,6 @@ public class ChatClientModel {
     public void setChatClientController(ChatClientController chatClientController) {
         this.chatClientController = chatClientController;
     }
+
+
 }
