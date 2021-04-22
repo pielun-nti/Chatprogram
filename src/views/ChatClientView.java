@@ -48,6 +48,7 @@ public class ChatClientView extends JFrame {
     private JLabel labelMessage;
     private JButton btnSendMessage;
     private JButton btnConnectToServer;
+    private JButton btnDisconnectFromServer;
 
     public ChatClientView(User user){
         this.user = user;
@@ -100,6 +101,7 @@ public class ChatClientView extends JFrame {
         labelMessage = new JLabel("Message:");
         btnSendMessage = new JButton("Send Message To All");
         btnConnectToServer = new JButton("Connect To Server");
+        btnDisconnectFromServer = new JButton("Disconnect From Server");
         menuAbout = new JMenu("About");
     }
 
@@ -129,6 +131,7 @@ public class ChatClientView extends JFrame {
         txtMessage.setToolTipText("Enter message here");
         btnSendMessage.setToolTipText("Click here to send message");
         btnConnectToServer.setToolTipText("Click here to connect to server");
+        btnDisconnectFromServer.setToolTipText("Click here to disconnect from server");
         labelServerIP.setLocation(10, 520 + 60);
         labelServerIP.setSize(100, 100);
         txtServerIP.setLocation(80, 560 + 60);
@@ -145,6 +148,8 @@ public class ChatClientView extends JFrame {
         btnSendMessage.setSize(300, 25);
         btnConnectToServer.setLocation(310, 620 + 60);
         btnConnectToServer.setSize(400, 25);
+        btnDisconnectFromServer.setLocation(720, 620 + 60);
+        btnDisconnectFromServer.setSize(400, 25);
         logjsp.setLocation(0, 0);
         logjsp.setSize(1180, 600);
         setFont(myFont);
@@ -176,6 +181,7 @@ public class ChatClientView extends JFrame {
         mainPanel.add(txtMessage);
         mainPanel.add(btnSendMessage);
         mainPanel.add(btnConnectToServer);
+        mainPanel.add(btnDisconnectFromServer);
         mainPanel.add(logjsp);
     }
 
@@ -192,6 +198,7 @@ public class ChatClientView extends JFrame {
         itemSendMsgSpecificClient.addActionListener(listener);
         btnSendMessage.addActionListener(listener);
         btnConnectToServer.addActionListener(listener);
+        btnDisconnectFromServer.addActionListener(listener);
     }
 
     public void addFrameWindowListener(WindowListener listener){

@@ -82,6 +82,18 @@ public class ChatServerMainReceiver extends Thread {
                     continue;
                 }
                 clientIP = socket.getInetAddress().getHostAddress();
+                if (message.equals("disconnect-me")){
+                    Info.clientsConnected--;
+                    chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Client self-disconnected: " + socket + " username: " + username + " ID: " + ID, "RED");
+                    try {
+                        chatServerController.getModel().getReceiversConnected().remove(ID);
+                        socket = null;
+                        stop();
+                    } catch (Exception ex2){
+                        ex2.printStackTrace();
+                    }
+                    System.out.println("Self-disconnected client with ID: " +  ID + " and username: " + username + " " + socket);
+                }
                 if (message.startsWith("setusername|split|")){
                     String[] data = message.split("\\|split\\|");
                     username = data[1];

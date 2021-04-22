@@ -93,6 +93,9 @@ public class ChatClientController {
                 if (command.equalsIgnoreCase("Connect To Server")){
                     connectToServer();
                 }
+                if (command.equalsIgnoreCase("Disconnect From Server")){
+                    disconnectFromServer();
+                }
                 if (command.equalsIgnoreCase("Send Message To Specific Client")){
                     sendMessageToSpecific();
                 }
@@ -104,6 +107,13 @@ public class ChatClientController {
                 }
             }
         }
+    }
+
+    /**
+     * Tells model to disconnect from the server.
+     */
+    private void disconnectFromServer() {
+        model.disconnectFromServer();
     }
 
     /**

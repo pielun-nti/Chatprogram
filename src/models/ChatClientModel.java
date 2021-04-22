@@ -6,6 +6,7 @@ import controllers.ChatClientController;
 import javax.net.ssl.*;
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.security.KeyStore;
@@ -119,6 +120,55 @@ public class ChatClientModel {
     }
 
     /**
+     * First tells server that this client will disconnect, then closes socket connection so this client is no longer connected to the server.
+     */
+    public void disconnectFromServer() {
+        if (chatClientMainReceiver == null){
+            JOptionPane.showMessageDialog(null, "You are not connected to a server", Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        sendDisconnectToServer();
+        try {
+            socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        socket = null;
+        try {
+            chatClientMainReceiver.socket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        chatClientMainReceiver.socket = null;
+        try {
+            chatClientMainReceiver.stop();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        chatClientMainReceiver = null;
+        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Disconnected from server", "RED");
+    }
+
+    /**
+     * Sends disconnect message to server so the server knows that this client disconnected.
+     */
+    public void sendDisconnectToServer(){
+        try {
+            if (socket == null){
+                JOptionPane.showMessageDialog(null, "SSLSocket is not connected to server. Connect before sending username.",Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+            writer.println(passUtil.toHexString("disconnect-me"));
+            writer.flush();
+            System.out.println("Sent disconnect message to server");
+        } catch (Exception ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error sending disconnect message: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
      * Sends username to server so the server directly know which username each client has.
      */
     public void sendUsernameToServer() {
@@ -168,6 +218,7 @@ public class ChatClientModel {
     public void setChatClientController(ChatClientController chatClientController) {
         this.chatClientController = chatClientController;
     }
+
 
 
 }
