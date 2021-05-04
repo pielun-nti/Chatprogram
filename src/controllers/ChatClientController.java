@@ -113,7 +113,7 @@ public class ChatClientController {
      * Tells model to disconnect from the server.
      */
     private void disconnectFromServer() {
-        model.disconnectFromServer();
+        model.disconnectFromServer(true);
     }
 
     /**

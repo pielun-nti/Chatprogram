@@ -86,11 +86,21 @@ public class ChatServerController {
                 if (command.equalsIgnoreCase("Start Chat Server")){
                     startChatServer();
                 }
+                if (command.equalsIgnoreCase("Stop Chat Server")){
+                    stopChatServer();
+                }
                 if (command.equalsIgnoreCase("Exit program")){
                     view.dispose();
                 }
             }
         }
+    }
+
+    /**
+     * Tells model to stop the chat server.
+     */
+    private void stopChatServer() {
+        model.stopChatServer();
     }
 
     /**

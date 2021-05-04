@@ -17,6 +17,7 @@ public class ChatServer extends Thread {
     int maxClientsReached = 0;
     ChatServerController chatServerController;
     boolean running;
+    boolean stopChatServer;
 
     /**
      * Chatserver constructor.
@@ -45,6 +46,9 @@ public class ChatServer extends Thread {
             System.out.println("Started main chat server on port " + serverPort);
             chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Started main server on port " + serverPort, "BLUE");
             for (int i = 0; i >= 0; i++) {
+                if (stopChatServer){
+                    break;
+                }
                 running = true;
                 if (Info.clientsConnected < Info.maxClientsConnected) {
                     Socket socket = chatServerController.getModel().ss.accept();
@@ -71,5 +75,45 @@ public class ChatServer extends Thread {
             System.out.println("ChatServer Exception: " + e.toString());
             running = false;
         }
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    public int getMaxClientsReached() {
+        return maxClientsReached;
+    }
+
+    public void setMaxClientsReached(int maxClientsReached) {
+        this.maxClientsReached = maxClientsReached;
+    }
+
+    public ChatServerController getChatServerController() {
+        return chatServerController;
+    }
+
+    public void setChatServerController(ChatServerController chatServerController) {
+        this.chatServerController = chatServerController;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public boolean isStopChatServer() {
+        return stopChatServer;
+    }
+
+    public void setStopChatServer(boolean stopChatServer) {
+        this.stopChatServer = stopChatServer;
     }
 }

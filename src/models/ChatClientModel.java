@@ -50,6 +50,9 @@ public class ChatClientModel {
             chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): " + msg , "BLUE");
         } catch (Exception ex){
             ex.printStackTrace();
+            if (ex.toString().toLowerCase().contains("socket output is already shutdown")){
+                disconnectFromServer(false);
+            }
             JOptionPane.showMessageDialog(null, "Error sending message: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -72,6 +75,9 @@ public class ChatClientModel {
             chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg , "BLUE");
         } catch (Exception ex){
             ex.printStackTrace();
+            if (ex.toString().toLowerCase().contains("socket output is already shutdown")){
+                disconnectFromServer(false);
+            }
             JOptionPane.showMessageDialog(null, "Error sending message: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -122,12 +128,14 @@ public class ChatClientModel {
     /**
      * First tells server that this client will disconnect, then closes socket connection so this client is no longer connected to the server.
      */
-    public void disconnectFromServer() {
-        if (chatClientMainReceiver == null){
+    public void disconnectFromServer(boolean sendDisconnectToServer) {
+        if (chatClientMainReceiver == null & sendDisconnectToServer){
             JOptionPane.showMessageDialog(null, "You are not connected to a server", Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
             return;
         }
-        sendDisconnectToServer();
+        if (sendDisconnectToServer) {
+            sendDisconnectToServer();
+        }
         try {
             socket.close();
         } catch (Exception e) {
@@ -164,6 +172,9 @@ public class ChatClientModel {
             System.out.println("Sent disconnect message to server");
         } catch (Exception ex){
             ex.printStackTrace();
+            if (ex.toString().toLowerCase().contains("socket output is already shutdown")){
+                disconnectFromServer(false);
+            }
             JOptionPane.showMessageDialog(null, "Error sending disconnect message: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
         }
     }

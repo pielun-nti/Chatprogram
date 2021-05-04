@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Chatservermodel is a class that does the network things mostly.
@@ -26,6 +27,58 @@ public class ChatServerModel {
 
     public void setChatServerController(ChatServerController chatServerController){
         this.chatServerController = chatServerController;
+    }
+
+    /**
+     * Stops the chat server
+     * @return successful stopped server or not
+     */
+    public boolean stopChatServer(){
+        try {
+            if (chatServer != null) {
+                if (chatServer.running) {
+                    chatServer.running = false;
+                    chatServer.stopChatServer = true;
+                    try {
+                        chatServer.stop();
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                    chatServer = null;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Chat server is not running", Env.ChatServerMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Chat server is not running", Env.ChatServerMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            try {
+                chatServerController.getModel().ss.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+            chatServerController.getModel().ss = null;
+            for (int i = 0; i < chatServerController.getModel().receiversConnected.size();i++){
+                try {
+                    chatServerController.getModel().receiversConnected.get(i).socket.close();
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                }
+                chatServerController.getModel().receiversConnected.get(i).socket = null;
+                try {
+                    chatServerController.getModel().receiversConnected.get(i).stop();
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                }
+                chatServerController.getModel().receiversConnected.remove(i);
+            }
+            chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Stopped main chat server", "RED");
+            return true;
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     /**
