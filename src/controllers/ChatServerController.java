@@ -89,11 +89,21 @@ public class ChatServerController {
                 if (command.equalsIgnoreCase("Stop Chat Server")){
                     stopChatServer();
                 }
+                if (command.equalsIgnoreCase("Kick a client")){
+                    disconnectClient();
+                }
                 if (command.equalsIgnoreCase("Exit program")){
                     view.dispose();
                 }
             }
         }
+    }
+
+    /**
+     * Tells server model to disconnect a client
+     */
+    private void disconnectClient() {
+        model.disconnectClient();
     }
 
     /**

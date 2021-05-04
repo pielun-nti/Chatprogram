@@ -183,4 +183,25 @@ public class ChatServerModel {
             }
         }
     }
+
+    /**
+     * Ask user for input (id or username) and then close the socket connection that has that id or username.
+     */
+    public boolean disconnectClient() {
+        if (JOptionPane.showConfirmDialog(null, "Do you want to enter client ID? Otherwise you have to enter client username. This will be used to disconnect client.", Env.ChatServerMessageBoxTitle,
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null)  == 0) {
+            try {
+                //ask for client id then disconnect
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        } else {
+            try {
+                //ask for client username then disconnect
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
 }

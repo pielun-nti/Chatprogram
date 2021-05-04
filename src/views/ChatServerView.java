@@ -73,7 +73,7 @@ public class ChatServerView extends JFrame {
         itemSelectReceiver = new JMenuItem("Not implemented yet");
         itemStartChatServer = new JMenuItem("Start Chat Server");
         itemStopChatServer = new JMenuItem("Stop Chat Server");
-        itemDisconnectClient = new JMenuItem("Kick a client (specify ID or ip)");
+        itemDisconnectClient = new JMenuItem("Kick a client");
         itemSaveChatLog = new JMenuItem("Save Chat Log");
         itemSomethinto = new JMenuItem("See Live Connections");
         itemSomethinthree = new JCheckBoxMenuItem("Not implemented yet");
