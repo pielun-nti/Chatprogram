@@ -106,7 +106,7 @@ public class ChatServerMainReceiver extends Thread {
                     String msg = data[3];
                     System.out.println("SPECIFIC RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToSpecific("msgspecific|split|" + usernameSendTo + "|split|" + username + "|split|" + msg, usernameSendTo);
-                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor);
+                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor);
                     //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
                     //send the last 10 msgs from server to each new client connected?
                     //Do this if i have time over
@@ -117,7 +117,7 @@ public class ChatServerMainReceiver extends Thread {
                     String msg = data[2];
                     System.out.println("RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToAllClients("msg|split|" + username + "|split|" + msg, ID);
-                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg, Env.messageColor);
+                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor);
                     //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
                     //send the last 10 msgs from server to each new client connected?
                 }

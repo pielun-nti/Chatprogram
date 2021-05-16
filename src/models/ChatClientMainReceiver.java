@@ -78,6 +78,12 @@ public class ChatClientMainReceiver extends Thread {
                     continue;
                 }
                 clientIP = socket.getInetAddress().getHostAddress();
+                if (message.startsWith("you-have-been-kicked")){
+                    if (chatClientController != null) {
+                        //chatClientController.getModel().disconnectFromServer(false);
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You have been kicked from the server, however not banned so you can reconnect if you like." , "RED");
+                    }
+                }
                 if (message.startsWith("msgspecific|split|")){
                     String[] data = message.split("\\|split\\|");
                     String from = data[2];

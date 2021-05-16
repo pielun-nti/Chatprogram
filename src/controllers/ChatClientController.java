@@ -166,4 +166,36 @@ public class ChatClientController {
     public void appendToPane(String msg, String color){
         view.appendToPane(view.txtLog, msg, color);
     }
+
+    public ChatClientModel getModel() {
+        return model;
+    }
+
+    public void setModel(ChatClientModel model) {
+        this.model = model;
+    }
+
+    public ChatClientView getView() {
+        return view;
+    }
+
+    public void setView(ChatClientView view) {
+        this.view = view;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ChatClientController getChatClientController() {
+        return chatClientController;
+    }
+
+    public void setChatClientController(ChatClientController chatClientController) {
+        this.chatClientController = chatClientController;
+    }
 }
