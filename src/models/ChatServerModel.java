@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,13 +21,52 @@ public class ChatServerModel {
     ChatServerController chatServerController;
     ArrayList<ChatServerMainReceiver> receiversConnected;
     PassUtil passUtil;
+    DBManager dbManager;
 
     public ChatServerModel(){
         this.passUtil = new PassUtil();
+        this.dbManager = new DBManager();
     }
 
     public void setChatServerController(ChatServerController chatServerController){
         this.chatServerController = chatServerController;
+    }
+
+    /**
+     * Insert message to the database.
+     * @param table The table in the database to insert the message in.
+     * @param sender The sender of the message
+     * @param body The content of the message
+     * @param receiver The receiver of the message.
+     */
+    public void logMessageDB(String table, String sender, String body, String receiver){
+        ArrayList<String> col = new ArrayList<>();
+        ArrayList<String> val = new ArrayList<>();
+        col.add("SENDER");
+        col.add("BODY");
+        col.add("RECEIVER");
+        col.add("DATE_TIME");
+        val.add(sender);
+        if (body.length() <= 7000) {
+            val.add(body);
+        }else{
+            val.add(body.substring(0, 7000));
+        }
+        val.add(receiver);
+        val.add(new Date().toString());
+        dbManager.insert(table, col, val);
+    }
+
+    /**
+     * Gets all chat messages.
+     * @return ResultSet with all chat messages.
+     */
+    public ResultSet getAllMessages(){
+        ResultSet rs = dbManager.selectAll("chatmessages");
+        if (rs != null) {
+            return rs;
+        }
+        return null;
     }
 
     /**

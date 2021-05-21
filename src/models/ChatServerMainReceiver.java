@@ -6,7 +6,10 @@ import controllers.ChatServerController;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * ChatServerMainReceiver is a thread that listens for received messages from any client.
@@ -98,6 +101,8 @@ public class ChatServerMainReceiver extends Thread {
                     String[] data = message.split("\\|split\\|");
                     username = data[1];
                     System.out.println("Set username: " + username);
+                    String chatmessages = getMessagesFromDB(username);
+                    chatServerController.getModel().forwardMessageToSpecific(chatmessages, username);
                 }
                 if (message.startsWith("msgspecific|split|")){
                     String[] data = message.split("\\|split\\|");
@@ -110,6 +115,7 @@ public class ChatServerMainReceiver extends Thread {
                     //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
                     //send the last 10 msgs from server to each new client connected?
                     //Do this if i have time over
+                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, usernameSendTo);
                 }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
@@ -120,6 +126,7 @@ public class ChatServerMainReceiver extends Thread {
                     chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor);
                     //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
                     //send the last 10 msgs from server to each new client connected?
+                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
                 }
 
             }
@@ -128,6 +135,44 @@ public class ChatServerMainReceiver extends Thread {
         }
 
         System.out.println("Processor completed ");
+    }
+
+
+    /**
+     * Gets all messages from database where sender equals username or where receiver contains username or All.
+     * @param username The username of the specific client that just connected
+     * @return All chat messages that are relevant for this user to see.
+     */
+    private String getMessagesFromDB(String username) {
+        try{
+            ResultSet rs = chatServerController.getModel().getAllMessages();
+            StringBuilder sb = new StringBuilder();
+            sb.append("chatmessages|end|");
+            int count = 0;
+            while(rs.next()) {
+                if (count == 50){
+                    break;
+                }
+                String msg = rs.getString("BODY");
+                String datetime = rs.getString("DATE_TIME");
+                String sender = rs.getString("SENDER").trim();
+                String receiver = rs.getString("RECEIVER").trim();
+                if (sender.equals(username.trim())){
+                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|end|");
+                    count++;
+                } else if (receiver.toLowerCase().contains(username.trim().toLowerCase()) || receiver.equals("All")){
+                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|end|");
+                    count++;
+                }
+            }
+
+            String messages = sb.toString();
+            messages = messages.substring(0, (messages.length() -  "|end|".length()));
+            return messages;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

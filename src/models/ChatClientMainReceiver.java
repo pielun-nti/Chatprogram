@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ChatClientMainReceiver is a thread that reads messages from the socket using inputstreamreader and bufferedreader.
@@ -82,6 +85,40 @@ public class ChatClientMainReceiver extends Thread {
                     if (chatClientController != null) {
                         //chatClientController.getModel().disconnectFromServer(false);
                         chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You have been kicked from the server, however not banned so you can reconnect if you like." , "RED");
+                    }
+                }
+                if (message.startsWith("chatmessages|end|")){
+                    String[] parts = message.split("\\|end\\|");
+                    Pattern pattern = Pattern.compile("\\|end\\|");
+                    Matcher matcher = pattern.matcher(message);
+                    int count = 0;
+                    while (matcher.find()) count++;
+                    System.out.println(message);
+                    if (count > 0){
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
+                        chatClientController.appendToPane("LAST " + count + " MESSAGES BELOW:", "GREEN");
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
+                    }
+                    for (int i = 1; i <= count; i++) {
+                            if (parts[i] != null) {
+                                String[] part2 = parts[i].split("\\|split\\|");
+                                String sender = part2[0];
+                                String msg = part2[1];
+                                String datetime = part2[2];
+                                String receiver = part2[3];
+                                    if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
+                                        chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): " + msg, Env.messageColor);
+                                    } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
+                                        chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): " + msg, Env.messageColor);
+                                    } else if (sender.equals(username)) {
+                                        chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": " + msg, "BLUE");
+                                    } else if (receiver.equals("All")) {
+                                        chatClientController.appendToPane(datetime + ": " + sender + ": " + msg, Env.messageColor);
+                                    }
+                        }
+                    }
+                    if (count > 0){
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
                     }
                 }
                 if (message.startsWith("msgspecific|split|")){

@@ -188,6 +188,7 @@ public class ChatClientModel {
                 JOptionPane.showMessageDialog(null, "SSLSocket is not connected to server. Connect before sending username.",Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            chatClientMainReceiver.username = user.getUsername();
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
             writer.println(passUtil.toHexString("setusername|split|" + user.getUsername()));
             writer.flush();
