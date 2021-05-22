@@ -41,6 +41,8 @@ public class ChatServerView extends JFrame {
     private final int HEIGHT = 600;
     private int fontSize = 14;
     boolean DontUseTextColors = false;
+    BufferedImage logo;
+    BufferedImage resizedLogo;
 
     public ChatServerView(){
         initComponents();
@@ -61,6 +63,20 @@ public class ChatServerView extends JFrame {
         setTitle(Env.ChatServerMessageBoxTitle);
         setLocationRelativeTo(null);
         pack();
+    }
+
+    /**
+     * Initializes Images
+     */
+    private void initImages() {
+        try {
+            logo = ImageIO.read(
+                    getClass().getResource("./img/logo.png"));
+            setIconImage(logo);
+            resizedLogo = resize(logo, 40, 40);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

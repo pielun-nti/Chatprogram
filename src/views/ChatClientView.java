@@ -51,6 +51,9 @@ public class ChatClientView extends JFrame {
     private JButton btnConnectToServer;
     private JButton btnDisconnectFromServer;
     private JComboBox emojiSelector;
+    private JButton btnSendImageToAll;
+    BufferedImage logo;
+    BufferedImage resizedLogo;
 
     /**
      * ChatClientView constructor
@@ -66,6 +69,7 @@ public class ChatClientView extends JFrame {
         addComponents();
         changeAllFont(mainPanel, myFont);
         initKeystrokes();
+        initImages();
         initKeyListeners();
         Dimension dim = new Dimension(WIDTH, HEIGHT);
         setJMenuBar(mainMenuBar);
@@ -77,6 +81,20 @@ public class ChatClientView extends JFrame {
         setTitle(Env.ChatClientMessageBoxTitle + " - logged in as: " + user.getUsername());
         setLocationRelativeTo(null);
         pack();
+    }
+
+    /**
+     * Initializes Images
+     */
+    private void initImages() {
+        try {
+            logo = ImageIO.read(
+                    getClass().getResource("./img/logo.png"));
+            setIconImage(logo);
+            resizedLogo = resize(logo, 40, 40);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -110,6 +128,7 @@ public class ChatClientView extends JFrame {
         btnSendMessage = new JButton("Send Message To All");
         btnConnectToServer = new JButton("Connect To Server");
         btnDisconnectFromServer = new JButton("Disconnect From Server");
+        btnSendImageToAll = new JButton("Send Image To All");
         menuAbout = new JMenu("About");
     }
 
@@ -142,6 +161,7 @@ public class ChatClientView extends JFrame {
         btnSendMessage.setToolTipText("Click here to send message");
         btnConnectToServer.setToolTipText("Click here to connect to server");
         btnDisconnectFromServer.setToolTipText("Click here to disconnect from server");
+        btnSendImageToAll.setToolTipText("Click here to send image to everyone");
         emojiSelector.setFont(myFont);
         labelServerIP.setLocation(10, 520 + 60);
         labelServerIP.setSize(100, 100);
@@ -165,6 +185,8 @@ public class ChatClientView extends JFrame {
         logjsp.setSize(1180, 600);
         emojiSelector.setSize(100, 25);
         emojiSelector.setLocation(300, 590 + 60);
+        btnSendImageToAll.setSize(300, 25);
+        btnSendImageToAll.setLocation(300, 590 + 60);
         setFont(myFont);
         changeAllFont(mainPanel, myFont);
         changeAllButtonFont(mainPanel, myFont);
@@ -203,6 +225,7 @@ public class ChatClientView extends JFrame {
         mainPanel.add(btnSendMessage);
         mainPanel.add(btnConnectToServer);
         mainPanel.add(btnDisconnectFromServer);
+        mainPanel.add(btnSendImageToAll);
         mainPanel.add(logjsp);
         //mainPanel.add(emojiSelector);
     }
@@ -222,6 +245,7 @@ public class ChatClientView extends JFrame {
         btnSendMessage.addActionListener(listener);
         btnConnectToServer.addActionListener(listener);
         btnDisconnectFromServer.addActionListener(listener);
+        btnSendImageToAll.addActionListener(listener);
     }
 
     public void addFrameWindowListener(WindowListener listener){
@@ -317,7 +341,7 @@ public class ChatClientView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "invisible text", style);
+                        styledoc.insertString(styledoc.getLength(), "", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
@@ -333,7 +357,7 @@ public class ChatClientView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "invisible text", style);
+                        styledoc.insertString(styledoc.getLength(), "", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
@@ -438,6 +462,14 @@ public class ChatClientView extends JFrame {
 
     public JButton getBtnDisconnectFromServer() {
         return btnDisconnectFromServer;
+    }
+
+    public JButton getBtnSendImageToAll() {
+        return btnSendImageToAll;
+    }
+
+    public void setBtnSendImageToAll(JButton btnSendImageToAll) {
+        this.btnSendImageToAll = btnSendImageToAll;
     }
 
     public void setBtnDisconnectFromServer(JButton btnDisconnectFromServer) {

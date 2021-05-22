@@ -3,14 +3,14 @@ package models;
 import config.Env;
 import controllers.ChatClientController;
 
+import javax.imageio.ImageIO;
 import javax.net.ssl.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.security.KeyStore;
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -179,6 +179,88 @@ public class ChatClientModel {
     }
 
     /**
+     * Asks user to select image to send through filedialog and then sends the image to the server as bytes in another thread.
+     */
+    public void sendImageToAll(){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            String imagepath = fileChooser.getSelectedFile().getAbsolutePath();
+            File image = new File(imagepath);
+            long imgsize = image.length();
+            try {
+                BufferedImage img = ImageIO.read(image);
+                String base64Img = null;
+                if (imagepath.endsWith(".png")) {
+                    base64Img = encodeImageToBase64String(img, "png");
+                } else {
+                    base64Img = encodeImageToBase64String(img, "jpg");
+                }
+                if (base64Img == null){
+                    JOptionPane.showMessageDialog(null, "Error sending image to all because image didnt get loaded correctly.", Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                try {
+                    if (socket == null){
+                        JOptionPane.showMessageDialog(null, "SSLSocket is not connected to server. Connect before sending image.",Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+                    writer.println(passUtil.toHexString("image|split|" + user.getUsername() + "|split|" + base64Img));
+                    writer.flush();
+                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): " , "BLUE", imagepath);
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                    if (ex.toString().toLowerCase().contains("socket output is already shutdown")){
+                        disconnectFromServer(false);
+                    }
+                    JOptionPane.showMessageDialog(null, "Error sending image to all: " + ex.toString(),Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    /**
+     *
+     * @param image
+     * @param type
+     * @return
+     */
+    public String encodeImageToBase64String(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+            imageString = Base64.getEncoder().encodeToString(imageBytes);
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
+    }
+
+    public BufferedImage decodeBase64StringToImage(String imageString) {
+
+        BufferedImage image = null;
+        byte[] imageByte;
+        try {
+            imageByte = Base64.getDecoder().decode(imageString);
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+            image = ImageIO.read(bis);
+            bis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    /**
      * Sends disconnect message to server so the server knows that this client disconnected.
      */
     public void sendDisconnectToServer(){
@@ -251,7 +333,5 @@ public class ChatClientModel {
     public void setChatClientController(ChatClientController chatClientController) {
         this.chatClientController = chatClientController;
     }
-
-
 
 }

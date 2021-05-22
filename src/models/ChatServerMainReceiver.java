@@ -112,10 +112,16 @@ public class ChatServerMainReceiver extends Thread {
                     System.out.println("SPECIFIC RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToSpecific("msgspecific|split|" + usernameSendTo + "|split|" + username + "|split|" + msg, usernameSendTo);
                     chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor);
-                    //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
-                    //send the last 10 msgs from server to each new client connected?
-                    //Do this if i have time over
+
                     chatServerController.getModel().logMessageDB("chatmessages", username, msg, usernameSendTo);
+                }
+                if (message.startsWith("image|split|")){
+                    String[] data = message.split("\\|split\\|");
+                    username = data[1];
+                    String base64Img = data[2];
+                    System.out.println("RECEIVED IMAGE-BASE64 FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username);
+                    chatServerController.getModel().forwardMessageToAllClients("image|split|" + username + "|split|" + base64Img, ID);
+                   // chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
                 }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
@@ -124,8 +130,6 @@ public class ChatServerMainReceiver extends Thread {
                     System.out.println("RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToAllClients("msg|split|" + username + "|split|" + msg, ID);
                     chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor);
-                    //log chat message in database then retrieve&print around 10 msgs on start for both server & client?
-                    //send the last 10 msgs from server to each new client connected?
                     chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
                 }
 

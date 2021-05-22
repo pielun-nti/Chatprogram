@@ -141,6 +141,9 @@ public class ChatClientController {
                 if (command.equalsIgnoreCase("Send Message To All")){
                     sendMessageToAll();
                 }
+                if (command.equalsIgnoreCase("Send Image To All")){
+                    sendImageToAll();
+                }
                 if (command.equalsIgnoreCase("Clear Chat Messages")){
                     clearChatMessages();
                 }
@@ -149,6 +152,13 @@ public class ChatClientController {
                 }
             }
         }
+    }
+
+    /**
+     * Tells model to send image to all.
+     */
+    private void sendImageToAll() {
+        model.sendImageToAll();
     }
 
     /**
@@ -215,7 +225,9 @@ public class ChatClientController {
      */
     public void appendToPane(String msg, String color, String imgpath){
         view.appendToPane(view.txtLog, msg, color, imgpath);
-        System.out.println("Image Path: " + imgpath);
+        if (imgpath != null) {
+            System.out.println("Image Path: " + imgpath);
+        }
     }
 
     public ChatClientModel getModel() {

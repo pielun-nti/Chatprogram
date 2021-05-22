@@ -3,11 +3,15 @@ package models;
 import config.Env;
 import controllers.ChatClientController;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -126,19 +130,32 @@ public class ChatClientMainReceiver extends Thread {
                     String from = data[2];
                     username = data[1];
                     String msg = data[3];
-                    System.err.println("RECEIVED SPECIFIC: " + new Date(System.currentTimeMillis()) + ": from:  " + from + ": to: " + username + ": " + msg);
-                    if (chatClientController != null) {
-                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": from:" + from + ": to: You (" + username + "): " + msg, Env.messageColor, null);
+                    System.err.println("RECEIVED MSG FROM SPECIFIC: " + new Date(System.currentTimeMillis()) + ": from:  " + from + ": to: " + username + ": " + msg);
+                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": from:" + from + ": to: You (" + username + "): " + msg, Env.messageColor, null);
+
+                }
+                if (message.startsWith("image|split|")){
+                    String[] data = message.split("\\|split\\|");
+                    username = data[1];
+                    String base64Img = data[2];
+                    System.err.println("RECEIVED IMG-BASE64: " + new Date(System.currentTimeMillis()) + ": " + username + ": " + base64Img);
+                    BufferedImage image = chatClientController.getModel().decodeBase64StringToImage(base64Img);
+                    if (image != null){
+                        //int random = 1 + (int) (Math.random() * 100000);
+                        File dir = new File(System.getProperty("user.dir") + "/chatimages/");
+                        int pos = Objects.requireNonNull(dir.list()).length;
+                        File f = new File(System.getProperty("user.dir") + "/chatimages/" + username + "-" + dir + ".png");
+                        ImageIO.write(image, "png", f);
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": ", Env.messageColor, f.getAbsolutePath());
                     }
+
                 }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
                     username = data[1];
                     String msg = data[2];
-                    System.err.println("RECEIVED: " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
-                    if (chatClientController != null) {
-                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": " + msg, Env.messageColor, null);
-                    }
+                    System.err.println("RECEIVED MSG: " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
+                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": " + msg, Env.messageColor, null);
                 }
 
             }
