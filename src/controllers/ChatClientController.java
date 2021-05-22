@@ -102,11 +102,21 @@ public class ChatClientController {
                 if (command.equalsIgnoreCase("Send Message To All")){
                     sendMessageToAll();
                 }
+                if (command.equalsIgnoreCase("Clear Chat Messages")){
+                    clearChatMessages();
+                }
                 if (command.equalsIgnoreCase("Exit program")){
                     view.dispose();
                 }
             }
         }
+    }
+
+    /**
+     * Tells the view to clear the textarea.
+     */
+    private void clearChatMessages() {
+        view.getTxtLog().setText("");
     }
 
     /**

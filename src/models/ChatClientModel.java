@@ -5,6 +5,7 @@ import controllers.ChatClientController;
 
 import javax.net.ssl.*;
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -69,10 +70,30 @@ public class ChatClientModel {
             }
             String usernameSendTo = JOptionPane.showInputDialog(null, "Enter username to send message to");
             String msg = JOptionPane.showInputDialog(null, "Enter message to send to client with username: " + usernameSendTo);
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
-            writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
-            writer.flush();
-            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg , "BLUE");
+            if (usernameSendTo.trim().equals(user.getUsername().trim())){
+                JPanel jp = new JPanel();
+                jp.setLayout(new BorderLayout());
+                JLabel jl = new JLabel(
+                        "<html><font color=red><b>Are you sure that you want to send a message to yourself? </font>:"
+                                + "</b><br><br></html>");
+                Font font = new Font("Arial", java.awt.Font.PLAIN, 14);
+                jl.setFont(font);
+                jp.add(jl, BorderLayout.NORTH);
+                if (JOptionPane.showConfirmDialog(null, jp, Env.ChatClientMessageBoxTitle,
+                        JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE, null)  == 0) {
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+                    writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
+                    writer.flush();
+                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE");
+                } else {
+                    System.out.println("Input cancelled");
+                }
+            } else {
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+                writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
+                writer.flush();
+                chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE");
+            }
         } catch (Exception ex){
             ex.printStackTrace();
             if (ex.toString().toLowerCase().contains("socket output is already shutdown")){

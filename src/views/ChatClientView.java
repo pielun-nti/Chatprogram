@@ -22,6 +22,7 @@ public class ChatClientView extends JFrame {
     private JMenuBar mainMenuBar;
     private JMenuItem itemExitProgram;
     private JMenuItem itemSendMsgSpecificClient;
+    private JMenuItem itemClearChatMessages;
     private JMenuItem itemSelectReceiver;
     private JMenuItem itemStartReceivingAccessibilityEvents;
     private JMenuItem itemStopReceivingAccessibilityEvents;
@@ -81,6 +82,7 @@ public class ChatClientView extends JFrame {
         mainMenuBar = new JMenuBar();
         itemExitProgram = new JMenuItem("Exit program");
         itemSendMsgSpecificClient = new JMenuItem("Send Message To Specific Client");
+        itemClearChatMessages = new JMenuItem("Clear Chat Messages");
         itemSelectReceiver = new JMenuItem("Not implemented yet");
         itemStartReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
         itemStopReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
@@ -110,6 +112,8 @@ public class ChatClientView extends JFrame {
         txtLog.setEditable(false);
         itemSendMsgSpecificClient.setFont(itemFont);
         itemSendMsgSpecificClient.setToolTipText("Click here to send message to specific client");
+        itemClearChatMessages.setFont(itemFont);
+        itemClearChatMessages.setToolTipText("Click here to clear all chat messages from the textarea");
         itemSelectReceiver.setFont(itemFont);
         itemSelectReceiver.setToolTipText("Click here to select receiver");
         itemStartReceivingAccessibilityEvents.setFont(itemFont);
@@ -161,6 +165,7 @@ public class ChatClientView extends JFrame {
     private void addComponents() {
         menuOptions.add(itemExitProgram);
         menuOptions.add(itemSendMsgSpecificClient);
+        menuOptions.add(itemClearChatMessages);
         menuOptions.add(itemSelectReceiver);
         //menuOptions.add(itemStartReceivingAccessibilityEvents);
         //menuOptions.add(itemStopReceivingAccessibilityEvents);
@@ -196,6 +201,7 @@ public class ChatClientView extends JFrame {
         itemKeepDeviceAwakeThisWindowOnly.addActionListener(listener);
         itemExitProgram.addActionListener(listener);
         itemSendMsgSpecificClient.addActionListener(listener);
+        itemClearChatMessages.addActionListener(listener);
         btnSendMessage.addActionListener(listener);
         btnConnectToServer.addActionListener(listener);
         btnDisconnectFromServer.addActionListener(listener);
