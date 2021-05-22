@@ -128,9 +128,13 @@ public class ChatServerController {
      * Tells the server view to append text to jtextarea with text color.
      * @param msg Text to add
      * @param color Text color
+     * @param imgpath The path to where the image is located
      */
-    public void appendToPane(String msg, String color){
-        view.appendToPane(view.txtLog, msg, color);
+    public void appendToPane(String msg, String color, String imgpath){
+        view.appendToPane(view.txtLog, msg, color, imgpath);
+        if (imgpath != null){
+            System.out.println("Image Path: " + imgpath);
+        }
     }
 
     public void setModel(ChatServerModel model) {

@@ -3,13 +3,17 @@ package models;
 import config.Env;
 import controllers.ChatServerController;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * ChatServerMainReceiver is a thread that listens for received messages from any client.
@@ -23,6 +27,7 @@ public class ChatServerMainReceiver extends Thread {
     int ID;
     String username;
     String country;
+    Base64Helper base64Helper;
 
     /**
      * Constructor
@@ -35,6 +40,7 @@ public class ChatServerMainReceiver extends Thread {
         this.socket = socket;
         this.chatServerController = chatServerController;
         passUtil = new PassUtil();
+        base64Helper = new Base64Helper();
     }
 
     /**
@@ -48,7 +54,7 @@ public class ChatServerMainReceiver extends Thread {
             System.err.println("readFromStream Error: " + ex);
             if (ex.toString().contains("Connection reset")){
                 Info.clientsConnected--;
-                chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Client disconnected: " + socket, "RED");
+                chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Client disconnected: " + socket, "RED", null);
                 try {
                     chatServerController.getModel().getReceiversConnected().remove(ID);
                     socket = null;
@@ -87,7 +93,7 @@ public class ChatServerMainReceiver extends Thread {
                 clientIP = socket.getInetAddress().getHostAddress();
                 if (message.equals("disconnect-me")){
                     Info.clientsConnected--;
-                    chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Client self-disconnected: " + socket + " username: " + username + " ID: " + ID, "RED");
+                    chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Client self-disconnected: " + socket + " username: " + username + " ID: " + ID, "RED", null);
                     try {
                         chatServerController.getModel().getReceiversConnected().remove(ID);
                         socket = null;
@@ -111,7 +117,7 @@ public class ChatServerMainReceiver extends Thread {
                     String msg = data[3];
                     System.out.println("SPECIFIC RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToSpecific("msgspecific|split|" + usernameSendTo + "|split|" + username + "|split|" + msg, usernameSendTo);
-                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor);
+                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor, null);
 
                     chatServerController.getModel().logMessageDB("chatmessages", username, msg, usernameSendTo);
                 }
@@ -121,6 +127,15 @@ public class ChatServerMainReceiver extends Thread {
                     String base64Img = data[2];
                     System.out.println("RECEIVED IMAGE-BASE64 FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username);
                     chatServerController.getModel().forwardMessageToAllClients("image|split|" + username + "|split|" + base64Img, ID);
+                    BufferedImage image = base64Helper.decodeBase64StringToImage(base64Img);
+                    if (image != null){
+                        //int random = 1 + (int) (Math.random() * 100000);
+                        File dir = new File(System.getProperty("user.dir") + "/chatimages/");
+                        int pos = Objects.requireNonNull(dir.list()).length;
+                        File f = new File(System.getProperty("user.dir") + "/chatimages/" + username + "-" + pos + ".png");
+                        ImageIO.write(image, "png", f);
+                        chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": ", Env.messageColor, f.getAbsolutePath());
+                    }
                    // chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
                 }
                 if (message.startsWith("msg|split|")){
@@ -129,7 +144,7 @@ public class ChatServerMainReceiver extends Thread {
                     String msg = data[2];
                     System.out.println("RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToAllClients("msg|split|" + username + "|split|" + msg, ID);
-                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor);
+                    chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor, null);
                     chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
                 }
 

@@ -26,6 +26,7 @@ public class ChatClientMainReceiver extends Thread {
     String clientIP;
     String username;
     String country;
+    Base64Helper base64Helper;
 
     /**
      * Constructor 1 with only socket argument (only used for test classes)
@@ -34,6 +35,7 @@ public class ChatClientMainReceiver extends Thread {
     public ChatClientMainReceiver(Socket socket) {
         this.socket = socket;
         passUtil = new PassUtil();
+        base64Helper = new Base64Helper();
     }
 
     /**
@@ -139,12 +141,12 @@ public class ChatClientMainReceiver extends Thread {
                     username = data[1];
                     String base64Img = data[2];
                     System.err.println("RECEIVED IMG-BASE64: " + new Date(System.currentTimeMillis()) + ": " + username + ": " + base64Img);
-                    BufferedImage image = chatClientController.getModel().decodeBase64StringToImage(base64Img);
+                    BufferedImage image = base64Helper.decodeBase64StringToImage(base64Img);
                     if (image != null){
                         //int random = 1 + (int) (Math.random() * 100000);
                         File dir = new File(System.getProperty("user.dir") + "/chatimages/");
                         int pos = Objects.requireNonNull(dir.list()).length;
-                        File f = new File(System.getProperty("user.dir") + "/chatimages/" + username + "-" + dir + ".png");
+                        File f = new File(System.getProperty("user.dir") + "/chatimages/" + username + "-" + pos + ".png");
                         ImageIO.write(image, "png", f);
                         chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": ", Env.messageColor, f.getAbsolutePath());
                     }

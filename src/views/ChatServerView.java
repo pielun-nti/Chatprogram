@@ -4,7 +4,7 @@ import config.Env;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -209,19 +209,29 @@ public class ChatServerView extends JFrame {
     /**
      * Appends text to a JTextPane with color, font, styling and different content types support
      */
-    public void appendToPane(JTextPane tp, String msg, String c)
+    public void appendToPane(JTextPane tp, String msg, String c, String imgpath)
     {
         if (!DontUseTextColors) {
             //StyleContext sc = StyleContext.getDefaultStyleContext();
             tp.setContentType("text/html");
             HTMLDocument doc = (HTMLDocument)tp.getDocument();
             HTMLEditorKit editorKit = (HTMLEditorKit)tp.getEditorKit();
+            SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+            StyleConstants.setItalic(attributeSet, true);
+            tp.setCharacterAttributes(attributeSet, true);
+            StyledDocument styledoc = (StyledDocument) tp.getDocument();
+            Style style = styledoc.addStyle("StyleName", null);
 
             if (tp.getText().equals("")) {
-                //tp.setText(msg);
                 try {
-                    msg = msg.replace("\n", "<br>");
-                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    if (msg != null) {
+                        msg = msg.replace("\n", "<br>");
+                        editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    }
+                    if (imgpath != null) {
+                        StyleConstants.setIcon(style, new ImageIcon(imgpath));
+                        styledoc.insertString(styledoc.getLength(), "", style);
+                    }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -230,8 +240,14 @@ public class ChatServerView extends JFrame {
 
             } else {
                 try {
-                    msg = msg.replace("\n", "<br>");
-                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    if (msg != null) {
+                        msg = msg.replace("\n", "<br>");
+                        editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    }
+                    if (imgpath != null) {
+                        StyleConstants.setIcon(style, new ImageIcon(imgpath));
+                        styledoc.insertString(styledoc.getLength(), "", style);
+                    }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {

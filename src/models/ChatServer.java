@@ -44,7 +44,7 @@ public class ChatServer extends Thread {
             System.setProperty("javax.net.ssl.keyStorePassword", Env.SSLKeyStorePass);
             chatServerController.getModel().ss = SSLServerSocketFactory.getDefault().createServerSocket(serverPort);
             System.out.println("Started main chat server on port " + serverPort);
-            chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Started main server on port " + serverPort, "BLUE");
+            chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Started main server on port " + serverPort, "BLUE", null);
             for (int i = 0; i >= 0; i++) {
                 if (stopChatServer){
                     break;
@@ -53,7 +53,7 @@ public class ChatServer extends Thread {
                 if (Info.clientsConnected < Info.maxClientsConnected) {
                     Socket socket = chatServerController.getModel().ss.accept();
                     System.out.println("Accepted connection : " + socket);
-                    chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Accepted connection: " + socket, "GREEN");
+                    chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Accepted connection: " + socket, "GREEN", null);
                     chatServerController.getModel().chatMainReceiver = new ChatServerMainReceiver(Info.clientsConnected, socket, chatServerController);
                     chatServerController.getModel().chatMainReceiver.setPriority(10);
                     chatServerController.getModel().chatMainReceiver.start();

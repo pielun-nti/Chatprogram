@@ -23,6 +23,7 @@ public class ChatClientModel {
     User user;
     ChatClientController chatClientController;
     ChatClientMainReceiver chatClientMainReceiver;
+    Base64Helper base64helper;
 
     /**
      * Constructor
@@ -31,6 +32,7 @@ public class ChatClientModel {
     public ChatClientModel(User user) {
         passUtil = new PassUtil();
         this.user = user;
+        base64helper = new Base64Helper();
 
     }
 
@@ -193,9 +195,9 @@ public class ChatClientModel {
                 BufferedImage img = ImageIO.read(image);
                 String base64Img = null;
                 if (imagepath.endsWith(".png")) {
-                    base64Img = encodeImageToBase64String(img, "png");
+                    base64Img = base64helper.encodeImageToBase64String(img, "png");
                 } else {
-                    base64Img = encodeImageToBase64String(img, "jpg");
+                    base64Img = base64helper.encodeImageToBase64String(img, "jpg");
                 }
                 if (base64Img == null){
                     JOptionPane.showMessageDialog(null, "Error sending image to all because image didnt get loaded correctly.", Env.ChatClientMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
@@ -225,40 +227,7 @@ public class ChatClientModel {
 
     }
 
-    /**
-     *
-     * @param image
-     * @param type
-     * @return
-     */
-    public String encodeImageToBase64String(BufferedImage image, String type) {
-        String imageString = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, type, bos);
-            byte[] imageBytes = bos.toByteArray();
-            imageString = Base64.getEncoder().encodeToString(imageBytes);
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return imageString;
-    }
 
-    public BufferedImage decodeBase64StringToImage(String imageString) {
-
-        BufferedImage image = null;
-        byte[] imageByte;
-        try {
-            imageByte = Base64.getDecoder().decode(imageString);
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            image = ImageIO.read(bis);
-            bis.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return image;
-    }
 
     /**
      * Sends disconnect message to server so the server knows that this client disconnected.
