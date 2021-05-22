@@ -6,10 +6,9 @@ import models.User;
 import views.ChatClientView;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * ChatClientController is the class that controls the client model and view.
@@ -36,6 +35,46 @@ public class ChatClientController {
         model.setChatClientController(chatClientController);
         view.getTxtServerIP().setText("127.0.0.1");
         view.getTxtServerPort().setText("5900");
+        addEmojisToComboBox();
+        view.addItemListeners(new ItemChangeListener());
+    }
+
+    /**
+     * Adds emojis to the JComboBox.
+     */
+    private void addEmojisToComboBox() {
+        //byte[] emojiBytes = new byte[]{(byte)0xF0, (byte)0x9F, (byte)0x98, (byte)0x81};
+        //String emojiAsString = new String(emojiBytes, Charset.forName("UTF-8"));
+        view.getEmojiSelector().addItem("grinning face with smiling eyes");
+        view.getEmojiSelector().addItem("face with tears of joy");
+    }
+
+    /**
+     * ItemListener that listens for JComboBox item clicks.
+     */
+    private class ItemChangeListener implements ItemListener {
+        /**
+         * When item state changes for the jcombobox.
+         * @param event The itemevent that happens when user click on a JComboBox item.
+         */
+        @Override
+        public void itemStateChanged(ItemEvent event) {
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                try {
+                    String emoji = (String) event.getItem();
+                    System.out.println("Selected emoji: " + emoji);
+                    if (emoji.equalsIgnoreCase("grinning face with smiling eyes")){
+                        view.getTxtMessage().setText(view.getTxtMessage().getText() + String.format("%c", 0x1F601));
+                        System.out.println(String.format("%c", 0x1F601));
+                    } else if (emoji.equalsIgnoreCase("face with tears of joy")){
+                        view.getTxtMessage().setText(view.getTxtMessage().getText() + String.format("%c", 0x1F602));
+                        System.out.println(String.format("%c", 0x1F602));
+                    }
+                } catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -169,12 +208,14 @@ public class ChatClientController {
     }
 
     /**
-     * Append text to jtextarea on client view with text colors.
+     * Append text or image to jtextarea on client view with text colors.
      * @param msg Text to display on jtextarea
      * @param color The text color
+     * @param imgpath The string path to where the image is stored
      */
-    public void appendToPane(String msg, String color){
-        view.appendToPane(view.txtLog, msg, color);
+    public void appendToPane(String msg, String color, String imgpath){
+        view.appendToPane(view.txtLog, msg, color, imgpath);
+        System.out.println("Image Path: " + imgpath);
     }
 
     public ChatClientModel getModel() {

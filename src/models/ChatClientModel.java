@@ -48,7 +48,7 @@ public class ChatClientModel {
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
             writer.println(passUtil.toHexString("msg|split|" + user.getUsername() + "|split|" + msg));
             writer.flush();
-            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): " + msg , "BLUE");
+            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): " + msg , "BLUE", null);
         } catch (Exception ex){
             ex.printStackTrace();
             if (ex.toString().toLowerCase().contains("socket output is already shutdown")){
@@ -84,7 +84,7 @@ public class ChatClientModel {
                     PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
                     writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
                     writer.flush();
-                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE");
+                    chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE", null);
                 } else {
                     System.out.println("Input cancelled");
                 }
@@ -92,7 +92,7 @@ public class ChatClientModel {
                 PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
                 writer.println(passUtil.toHexString("msgspecific|split|" + usernameSendTo + "|split|" + user.getUsername() + "|split|" + msg));
                 writer.flush();
-                chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE");
+                chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You (" + user.getUsername() + "): To: " + usernameSendTo + ": " + msg, "BLUE", null);
             }
         } catch (Exception ex){
             ex.printStackTrace();
@@ -138,7 +138,7 @@ public class ChatClientModel {
             socket = ((SSLSocket) factory.createSocket(ip, port));
             chatClientMainReceiver = new ChatClientMainReceiver(socket, chatClientController);
             chatClientMainReceiver.start();
-            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Connected to server " + ip + ":" + port , "GREEN");
+            chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Connected to server " + ip + ":" + port , "GREEN", null);
             sendUsernameToServer();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -175,7 +175,7 @@ public class ChatClientModel {
             ex.printStackTrace();
         }
         chatClientMainReceiver = null;
-        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Disconnected from server", "RED");
+        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": Disconnected from server", "RED", null);
     }
 
     /**

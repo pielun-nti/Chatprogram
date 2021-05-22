@@ -84,7 +84,7 @@ public class ChatClientMainReceiver extends Thread {
                 if (message.startsWith("you-have-been-kicked")){
                     if (chatClientController != null) {
                         //chatClientController.getModel().disconnectFromServer(false);
-                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You have been kicked from the server, however not banned so you can reconnect if you like." , "RED");
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You have been kicked from the server, however not banned so you can reconnect if you like." , "RED", null);
                     }
                 }
                 if (message.startsWith("chatmessages|end|")){
@@ -95,9 +95,9 @@ public class ChatClientMainReceiver extends Thread {
                     while (matcher.find()) count++;
                     System.out.println(message);
                     if (count > 0){
-                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
-                        chatClientController.appendToPane("LAST " + count + " MESSAGES BELOW:", "GREEN");
-                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA", null);
+                        chatClientController.appendToPane("LAST " + count + " MESSAGES BELOW:", "GREEN", null);
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA", null);
                     }
                     for (int i = 1; i <= count; i++) {
                             if (parts[i] != null) {
@@ -107,18 +107,18 @@ public class ChatClientMainReceiver extends Thread {
                                 String datetime = part2[2];
                                 String receiver = part2[3];
                                     if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
-                                        chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): " + msg, Env.messageColor);
+                                        chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): " + msg, Env.messageColor, null);
                                     } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
-                                        chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): " + msg, Env.messageColor);
+                                        chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): " + msg, Env.messageColor, null);
                                     } else if (sender.equals(username)) {
-                                        chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": " + msg, "BLUE");
+                                        chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": " + msg, "BLUE", null);
                                     } else if (receiver.equals("All")) {
-                                        chatClientController.appendToPane(datetime + ": " + sender + ": " + msg, Env.messageColor);
+                                        chatClientController.appendToPane(datetime + ": " + sender + ": " + msg, Env.messageColor, null);
                                     }
                         }
                     }
                     if (count > 0){
-                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA");
+                        chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA", null);
                     }
                 }
                 if (message.startsWith("msgspecific|split|")){
@@ -128,7 +128,7 @@ public class ChatClientMainReceiver extends Thread {
                     String msg = data[3];
                     System.err.println("RECEIVED SPECIFIC: " + new Date(System.currentTimeMillis()) + ": from:  " + from + ": to: " + username + ": " + msg);
                     if (chatClientController != null) {
-                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": from:" + from + ": to: You (" + username + "): " + msg, Env.messageColor);
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": from:" + from + ": to: You (" + username + "): " + msg, Env.messageColor, null);
                     }
                 }
                 if (message.startsWith("msg|split|")){
@@ -137,7 +137,7 @@ public class ChatClientMainReceiver extends Thread {
                     String msg = data[2];
                     System.err.println("RECEIVED: " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     if (chatClientController != null) {
-                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": " + msg, Env.messageColor);
+                        chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": " + username + ": " + msg, Env.messageColor, null);
                     }
                 }
 

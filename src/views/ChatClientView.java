@@ -5,7 +5,7 @@ import models.User;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
@@ -50,7 +50,12 @@ public class ChatClientView extends JFrame {
     private JButton btnSendMessage;
     private JButton btnConnectToServer;
     private JButton btnDisconnectFromServer;
+    private JComboBox emojiSelector;
 
+    /**
+     * ChatClientView constructor
+     * @param user The user
+     */
     public ChatClientView(User user){
         this.user = user;
         initComponents();
@@ -80,6 +85,7 @@ public class ChatClientView extends JFrame {
     private void initComponents() {
         mainPanel = new JPanel(null);
         mainMenuBar = new JMenuBar();
+        emojiSelector = new JComboBox<Character>();
         itemExitProgram = new JMenuItem("Exit program");
         itemSendMsgSpecificClient = new JMenuItem("Send Message To Specific Client");
         itemClearChatMessages = new JMenuItem("Clear Chat Messages");
@@ -136,6 +142,7 @@ public class ChatClientView extends JFrame {
         btnSendMessage.setToolTipText("Click here to send message");
         btnConnectToServer.setToolTipText("Click here to connect to server");
         btnDisconnectFromServer.setToolTipText("Click here to disconnect from server");
+        emojiSelector.setFont(myFont);
         labelServerIP.setLocation(10, 520 + 60);
         labelServerIP.setSize(100, 100);
         txtServerIP.setLocation(80, 560 + 60);
@@ -156,11 +163,20 @@ public class ChatClientView extends JFrame {
         btnDisconnectFromServer.setSize(400, 25);
         logjsp.setLocation(0, 0);
         logjsp.setSize(1180, 600);
+        emojiSelector.setSize(100, 25);
+        emojiSelector.setLocation(300, 590 + 60);
         setFont(myFont);
         changeAllFont(mainPanel, myFont);
         changeAllButtonFont(mainPanel, myFont);
     }
 
+    /**
+     * Add item listeners.
+     * @param itemListener Listening for item change events.
+     */
+    public void addItemListeners(ItemListener itemListener){
+        emojiSelector.addItemListener(itemListener);
+    }
 
     private void addComponents() {
         menuOptions.add(itemExitProgram);
@@ -188,6 +204,7 @@ public class ChatClientView extends JFrame {
         mainPanel.add(btnConnectToServer);
         mainPanel.add(btnDisconnectFromServer);
         mainPanel.add(logjsp);
+        //mainPanel.add(emojiSelector);
     }
 
     public void addListeners(ActionListener listener){
@@ -279,19 +296,29 @@ public class ChatClientView extends JFrame {
     /**
      * Appends text to a JTextPane with color, font, styling and different content types support
      */
-    public void appendToPane(JTextPane tp, String msg, String c)
+    public void appendToPane(JTextPane tp, String msg, String c, String imgpath)
     {
         if (!DontUseTextColors) {
             //StyleContext sc = StyleContext.getDefaultStyleContext();
             tp.setContentType("text/html");
             HTMLDocument doc = (HTMLDocument)tp.getDocument();
             HTMLEditorKit editorKit = (HTMLEditorKit)tp.getEditorKit();
+            SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+            StyleConstants.setItalic(attributeSet, true);
+            tp.setCharacterAttributes(attributeSet, true);
+            StyledDocument styledoc = (StyledDocument) tp.getDocument();
+            Style style = styledoc.addStyle("StyleName", null);
 
             if (tp.getText().equals("")) {
-                //tp.setText(msg);
                 try {
-                    msg = msg.replace("\n", "<br>");
-                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    if (msg != null) {
+                        msg = msg.replace("\n", "<br>");
+                        editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    }
+                    if (imgpath != null) {
+                        StyleConstants.setIcon(style, new ImageIcon(imgpath));
+                        styledoc.insertString(styledoc.getLength(), "invisible text", style);
+                    }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -300,8 +327,14 @@ public class ChatClientView extends JFrame {
 
             } else {
                 try {
-                    msg = msg.replace("\n", "<br>");
-                    editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    if (msg != null) {
+                        msg = msg.replace("\n", "<br>");
+                        editorKit.insertHTML(doc, doc.getLength(), "<p style=margin:0;padding:0;color:" + c + ";font-size:" + fontSize + ";>" + msg + "</p>", 0, 0, null);
+                    }
+                    if (imgpath != null) {
+                        StyleConstants.setIcon(style, new ImageIcon(imgpath));
+                        styledoc.insertString(styledoc.getLength(), "invisible text", style);
+                    }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -377,6 +410,46 @@ public class ChatClientView extends JFrame {
 
     public JMenuBar getMainMenuBar() {
         return mainMenuBar;
+    }
+
+    public JMenuItem getItemSendMsgSpecificClient() {
+        return itemSendMsgSpecificClient;
+    }
+
+    public void setItemSendMsgSpecificClient(JMenuItem itemSendMsgSpecificClient) {
+        this.itemSendMsgSpecificClient = itemSendMsgSpecificClient;
+    }
+
+    public JMenuItem getItemClearChatMessages() {
+        return itemClearChatMessages;
+    }
+
+    public void setItemClearChatMessages(JMenuItem itemClearChatMessages) {
+        this.itemClearChatMessages = itemClearChatMessages;
+    }
+
+    public JMenuItem getItemSelectReceiver() {
+        return itemSelectReceiver;
+    }
+
+    public void setItemSelectReceiver(JMenuItem itemSelectReceiver) {
+        this.itemSelectReceiver = itemSelectReceiver;
+    }
+
+    public JButton getBtnDisconnectFromServer() {
+        return btnDisconnectFromServer;
+    }
+
+    public void setBtnDisconnectFromServer(JButton btnDisconnectFromServer) {
+        this.btnDisconnectFromServer = btnDisconnectFromServer;
+    }
+
+    public JComboBox getEmojiSelector() {
+        return emojiSelector;
+    }
+
+    public void setEmojiSelector(JComboBox emojiSelector) {
+        this.emojiSelector = emojiSelector;
     }
 
     public void setMainMenuBar(JMenuBar mainMenuBar) {
