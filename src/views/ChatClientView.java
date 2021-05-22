@@ -341,7 +341,7 @@ public class ChatClientView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "", style);
+                        styledoc.insertString(styledoc.getLength(), "inv", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
@@ -357,7 +357,7 @@ public class ChatClientView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "", style);
+                        styledoc.insertString(styledoc.getLength(), "inv", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();

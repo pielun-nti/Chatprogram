@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -119,13 +120,13 @@ public class ChatServerMainReceiver extends Thread {
                     chatServerController.getModel().forwardMessageToSpecific("msgspecific|split|" + usernameSendTo + "|split|" + username + "|split|" + msg, usernameSendTo);
                     chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": Specific from: " + username + ": to: " + usernameSendTo + ": " + msg, Env.messageColor, null);
 
-                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, usernameSendTo);
+                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, usernameSendTo, null);
                 }
                 if (message.startsWith("image|split|")){
                     String[] data = message.split("\\|split\\|");
                     username = data[1];
                     String base64Img = data[2];
-                    System.out.println("RECEIVED IMAGE-BASE64 FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username);
+                    System.out.println("RECEIVED IMAGE-BASE64 FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": "+ base64Img);
                     chatServerController.getModel().forwardMessageToAllClients("image|split|" + username + "|split|" + base64Img, ID);
                     BufferedImage image = base64Helper.decodeBase64StringToImage(base64Img);
                     if (image != null){
@@ -136,7 +137,7 @@ public class ChatServerMainReceiver extends Thread {
                         ImageIO.write(image, "png", f);
                         chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": ", Env.messageColor, f.getAbsolutePath());
                     }
-                   // chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
+                   chatServerController.getModel().logMessageDB("chatmessages", username, null, "All", base64Img);
                 }
                 if (message.startsWith("msg|split|")){
                     String[] data = message.split("\\|split\\|");
@@ -145,7 +146,7 @@ public class ChatServerMainReceiver extends Thread {
                     System.out.println("RECEIVED FROM:  " + ID + ": " + new Date(System.currentTimeMillis()) + ": " + username + ": " + msg);
                     chatServerController.getModel().forwardMessageToAllClients("msg|split|" + username + "|split|" + msg, ID);
                     chatServerController.appendToPane( socket + " at " + new Date(System.currentTimeMillis()) + ": ID: " + ID + ": " + username + ": " + msg, Env.messageColor, null);
-                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All");
+                    chatServerController.getModel().logMessageDB("chatmessages", username, msg, "All", null);
                 }
 
             }
@@ -176,11 +177,12 @@ public class ChatServerMainReceiver extends Thread {
                 String datetime = rs.getString("DATE_TIME");
                 String sender = rs.getString("SENDER").trim();
                 String receiver = rs.getString("RECEIVER").trim();
+                String img_base64 = rs.getString("IMG_BASE64");
                 if (sender.equals(username.trim())){
-                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|end|");
+                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|split|" + img_base64 + "|end|");
                     count++;
                 } else if (receiver.toLowerCase().contains(username.trim().toLowerCase()) || receiver.equals("All")){
-                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|end|");
+                    sb.append(sender + "|split|" + msg + "|split|" + datetime + "|split|" + receiver + "|split|" + img_base64 + "|end|");
                     count++;
                 }
             }

@@ -47,6 +47,7 @@ public class ChatClientMainReceiver extends Thread {
         this.socket = socket;
         this.chatClientController = chatClientController;
         passUtil = new PassUtil();
+        base64Helper = new Base64Helper();
     }
 
 
@@ -89,7 +90,6 @@ public class ChatClientMainReceiver extends Thread {
                 clientIP = socket.getInetAddress().getHostAddress();
                 if (message.startsWith("you-have-been-kicked")){
                     if (chatClientController != null) {
-                        //chatClientController.getModel().disconnectFromServer(false);
                         chatClientController.appendToPane(new Date(System.currentTimeMillis()) + ": You have been kicked from the server, however not banned so you can reconnect if you like." , "RED", null);
                     }
                 }
@@ -102,7 +102,7 @@ public class ChatClientMainReceiver extends Thread {
                     System.out.println(message);
                     if (count > 0){
                         chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA", null);
-                        chatClientController.appendToPane("LAST " + count + " MESSAGES BELOW:", "GREEN", null);
+                        chatClientController.appendToPane("LAST " + count + " MESSAGES/IMAGES BELOW:", "GREEN", null);
                         chatClientController.appendToPane("------------------------------------------------------------------------------------------------", "AQUA", null);
                     }
                     for (int i = 1; i <= count; i++) {
@@ -112,15 +112,58 @@ public class ChatClientMainReceiver extends Thread {
                                 String msg = part2[1];
                                 String datetime = part2[2];
                                 String receiver = part2[3];
-                                    if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
-                                        chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): " + msg, Env.messageColor, null);
-                                    } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
-                                        chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): " + msg, Env.messageColor, null);
-                                    } else if (sender.equals(username)) {
-                                        chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": " + msg, "BLUE", null);
-                                    } else if (receiver.equals("All")) {
-                                        chatClientController.appendToPane(datetime + ": " + sender + ": " + msg, Env.messageColor, null);
+                                String img_base64 = part2[4];
+                                if (msg != null) {
+                                    if (!msg.equalsIgnoreCase("null")) {
+                                        if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
+                                            chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): " + msg, Env.messageColor, null);
+                                        } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
+                                            chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): " + msg, Env.messageColor, null);
+                                        } else if (sender.equals(username)) {
+                                            chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": " + msg, "BLUE", null);
+                                        } else if (receiver.equals("All")) {
+                                            chatClientController.appendToPane(datetime + ": " + sender + ": test" + msg, Env.messageColor, null);
+                                        }
+                                    } else if (img_base64 != null) {
+                                        if (!img_base64.equalsIgnoreCase("null")) {
+                                            BufferedImage image = base64Helper.decodeBase64StringToImage(img_base64);
+                                            if (image != null) {
+                                                File dir = new File(System.getProperty("user.dir") + "/chatimages/");
+                                                int pos = Objects.requireNonNull(dir.list()).length;
+                                                File f = new File(System.getProperty("user.dir") + "/chatimages/" + sender + "-" + pos + ".png");
+                                                ImageIO.write(image, "png", f);
+                                                if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
+                                                    chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): ", Env.messageColor, f.getAbsolutePath());
+                                                } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
+                                                    chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): ", Env.messageColor, f.getAbsolutePath());
+                                                } else if (sender.equals(username)) {
+                                                    chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": ", "BLUE", f.getAbsolutePath());
+                                                } else if (receiver.equals("All")) {
+                                                    chatClientController.appendToPane(datetime + ": " + sender + ": hello", Env.messageColor, f.getAbsolutePath());
+                                                }
+                                            }
+                                        }
                                     }
+                                } else if (img_base64 != null){
+                                    if (!img_base64.equalsIgnoreCase("null")){
+                                    BufferedImage image = base64Helper.decodeBase64StringToImage(img_base64);
+                                    if (image != null) {
+                                        File dir = new File(System.getProperty("user.dir") + "/chatimages/");
+                                        int pos = Objects.requireNonNull(dir.list()).length;
+                                        File f = new File(System.getProperty("user.dir") + "/chatimages/" + sender + "-" + pos + ".png");
+                                        ImageIO.write(image, "png", f);
+                                        if (sender.equals(username) & receiver.toLowerCase().contains(username.toLowerCase())) {
+                                            chatClientController.appendToPane(datetime + ": from You to: You (" + username + "): ", Env.messageColor, f.getAbsolutePath());
+                                        } else if (receiver.toLowerCase().contains(username.toLowerCase())) {
+                                            chatClientController.appendToPane(datetime + ": from: " + sender + " to: You (" + username + "): ", Env.messageColor, f.getAbsolutePath());
+                                        } else if (sender.equals(username)) {
+                                            chatClientController.appendToPane(datetime + ": You (" + username + "): To: " + receiver + ": ", "BLUE", f.getAbsolutePath());
+                                        } else if (receiver.equals("All")) {
+                                            chatClientController.appendToPane(datetime + ": " + sender + ": hello", Env.messageColor, f.getAbsolutePath());
+                                        }
+                                    }
+                                    }
+                                }
                         }
                     }
                     if (count > 0){

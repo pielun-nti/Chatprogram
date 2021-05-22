@@ -4,10 +4,12 @@ import config.Env;
 import controllers.ChatServerController;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -26,6 +28,17 @@ public class ChatServerModel {
     public ChatServerModel(){
         this.passUtil = new PassUtil();
         this.dbManager = new DBManager();
+        createFolders();
+    }
+
+    /**
+     * Creates neccessary folders in the root directory.
+     */
+    private void createFolders() {
+        File f = new File(System.getProperty("user.dir") + "/chatimages/");
+        if (!f.exists()){
+            f.mkdir();
+        }
     }
 
     public void setChatServerController(ChatServerController chatServerController){
@@ -38,22 +51,33 @@ public class ChatServerModel {
      * @param sender The sender of the message
      * @param body The content of the message
      * @param receiver The receiver of the message.
+     * @param img_base64 The base64 string of the image
      */
-    public void logMessageDB(String table, String sender, String body, String receiver){
+    public void logMessageDB(String table, String sender, String body, String receiver, String img_base64){
         ArrayList<String> col = new ArrayList<>();
         ArrayList<String> val = new ArrayList<>();
         col.add("SENDER");
         col.add("BODY");
         col.add("RECEIVER");
         col.add("DATE_TIME");
+        col.add("IMG_BASE64");
         val.add(sender);
-        if (body.length() <= 7000) {
-            val.add(body);
-        }else{
-            val.add(body.substring(0, 7000));
+        if (body != null) {
+            if (body.length() <= 7000) {
+                val.add(body);
+            } else {
+                val.add(body.substring(0, 7000));
+            }
+        } else {
+            val.add(null);
         }
         val.add(receiver);
         val.add(new Date().toString());
+        if (img_base64 != null) {
+            val.add(img_base64);
+        } else {
+            val.add(null);
+        }
         dbManager.insert(table, col, val);
     }
 
@@ -113,7 +137,7 @@ public class ChatServerModel {
                 }
                 chatServerController.getModel().receiversConnected.remove(i);
             }
-            chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Stopped main chat server", "RED");
+            chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Stopped main chat server", "RED", null);
             return true;
         } catch (Exception ex){
             ex.printStackTrace();
@@ -274,7 +298,7 @@ public class ChatServerModel {
                     ex.printStackTrace();
                 }
                 receiversConnected.remove(ID);
-                chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Kicked client with ID: " + ID, "RED");
+                chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Kicked client with ID: " + ID, "RED", null);
                 return true;
             } catch (Exception ex){
                 ex.printStackTrace();
@@ -308,7 +332,7 @@ public class ChatServerModel {
                             ex.printStackTrace();
                         }
                         receiversConnected.remove(i);
-                        chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Kicked client with Username: " + username + " ID: " + i, "RED");
+                        chatServerController.appendToPane(new Date(System.currentTimeMillis()) + ": Kicked client with Username: " + username + " ID: " + i, "RED", null);
                         return true;
                     }
                 }

@@ -53,6 +53,7 @@ public class ChatServerView extends JFrame {
         addComponents();
         changeAllFont(mainPanel, myFont);
         initKeystrokes();
+        initImages();
         Dimension dim = new Dimension(WIDTH, HEIGHT);
         setJMenuBar(mainMenuBar);
         setSize(dim);
@@ -230,7 +231,7 @@ public class ChatServerView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "", style);
+                        styledoc.insertString(styledoc.getLength(), "inv", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
@@ -246,7 +247,7 @@ public class ChatServerView extends JFrame {
                     }
                     if (imgpath != null) {
                         StyleConstants.setIcon(style, new ImageIcon(imgpath));
-                        styledoc.insertString(styledoc.getLength(), "", style);
+                        styledoc.insertString(styledoc.getLength(), "inv", style);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();

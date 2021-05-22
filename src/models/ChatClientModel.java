@@ -33,8 +33,19 @@ public class ChatClientModel {
         passUtil = new PassUtil();
         this.user = user;
         base64helper = new Base64Helper();
-
+        createFolders();
     }
+
+    /**
+     * Creates neccessary folders in the root directory.
+     */
+    private void createFolders() {
+        File f = new File(System.getProperty("user.dir") + "/chatimages/");
+        if (!f.exists()){
+            f.mkdir();
+        }
+    }
+
 
     /**
      * Send message & username to all other clients and server (but this method only does send to the server
