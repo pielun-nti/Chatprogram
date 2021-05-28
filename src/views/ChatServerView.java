@@ -26,11 +26,6 @@ public class ChatServerView extends JFrame {
     private JMenuItem itemStopChatServer;
     private JMenuItem itemDisconnectClient;
     private JMenuItem itemSaveChatLog;
-    private JMenuItem itemSomethinto;
-    private JMenuItem itemClick;
-    private JMenuItem itemSwipe;
-    private JCheckBoxMenuItem itemSomethinthree;
-    private JCheckBoxMenuItem itemSomethinfour;
     private JMenuItem itemAbout;
     public JTextPane txtLog;
     private JScrollPane logjsp;
@@ -92,9 +87,6 @@ public class ChatServerView extends JFrame {
         itemStopChatServer = new JMenuItem("Stop Chat Server");
         itemDisconnectClient = new JMenuItem("Kick a client");
         itemSaveChatLog = new JMenuItem("Save Chat Log");
-        itemSomethinto = new JMenuItem("See Live Connections");
-        itemSomethinthree = new JCheckBoxMenuItem("Not implemented yet");
-        itemSomethinfour = new JCheckBoxMenuItem("Not implemented yet");
         txtLog= new JTextPane();
         logjsp = new JScrollPane(txtLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);        itemAbout = new JMenuItem("About this program");
         menuOptions = new JMenu("Options");
@@ -113,9 +105,6 @@ public class ChatServerView extends JFrame {
         itemStopChatServer.setFont(itemFont);
         itemDisconnectClient.setFont(itemFont);
         itemSaveChatLog.setFont(itemFont);
-        itemSomethinto.setFont(itemFont);
-        itemSomethinthree.setFont(itemFont);
-        itemSomethinfour.setFont(itemFont);
         itemAbout.setFont(itemFont);
         menuOptions.setFont(menuFont);
         menuSettings.setFont(menuFont);
@@ -131,9 +120,6 @@ public class ChatServerView extends JFrame {
         menuOptions.add(itemStopChatServer);
         menuOptions.add(itemDisconnectClient);
         menuOptions.add(itemSaveChatLog);
-        menuOptions.add(itemSomethinto);
-        menuOptions.add(itemSomethinthree);
-        menuOptions.add(itemSomethinfour);
         menuAbout.add(itemAbout);
         mainMenuBar.add(menuOptions);
         mainMenuBar.add(menuSettings);
@@ -148,9 +134,6 @@ public class ChatServerView extends JFrame {
         itemStopChatServer.addActionListener(listener);
         itemDisconnectClient.addActionListener(listener);
         itemSaveChatLog.addActionListener(listener);
-        itemSomethinto.addActionListener(listener);
-        itemSomethinthree.addActionListener(listener);
-        itemSomethinfour.addActionListener(listener);
         itemExitProgram.addActionListener(listener);
         itemSelectReceiver.addActionListener(listener);
     }

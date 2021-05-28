@@ -13,6 +13,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * ChatClientView class that extends JFrame.
+ */
 public class ChatClientView extends JFrame {
     private JPanel mainPanel;
     private JMenu menuOptions;
@@ -23,13 +26,6 @@ public class ChatClientView extends JFrame {
     private JMenuItem itemExitProgram;
     private JMenuItem itemSendMsgSpecificClient;
     private JMenuItem itemClearChatMessages;
-    private JMenuItem itemSelectReceiver;
-    private JMenuItem itemStartReceivingAccessibilityEvents;
-    private JMenuItem itemStopReceivingAccessibilityEvents;
-    private JMenuItem itemSetEditText;
-    private JMenuItem itemAppendEditText;
-    private JCheckBoxMenuItem itemKeepDeviceAwakeBackground;
-    private JCheckBoxMenuItem itemKeepDeviceAwakeThisWindowOnly;
     private JMenuItem itemAbout;
     public JTextPane txtLog;
     private JScrollPane logjsp;
@@ -107,13 +103,6 @@ public class ChatClientView extends JFrame {
         itemExitProgram = new JMenuItem("Exit program");
         itemSendMsgSpecificClient = new JMenuItem("Send Message To Specific Client");
         itemClearChatMessages = new JMenuItem("Clear Chat Messages");
-        itemSelectReceiver = new JMenuItem("Not implemented yet");
-        itemStartReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
-        itemStopReceivingAccessibilityEvents = new JMenuItem("Not implemented yet");
-        itemSetEditText = new JMenuItem("Not implemented yet");
-        itemAppendEditText = new JMenuItem("Not implemented yet");
-        itemKeepDeviceAwakeBackground = new JCheckBoxMenuItem("Not implemented yet");
-        itemKeepDeviceAwakeThisWindowOnly = new JCheckBoxMenuItem("Not implemented");
         txtLog= new JTextPane();
         logjsp = new JScrollPane(txtLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);        itemAbout = new JMenuItem("About this program");
         menuOptions = new JMenu("Options");
@@ -139,14 +128,6 @@ public class ChatClientView extends JFrame {
         itemSendMsgSpecificClient.setToolTipText("Click here to send message to specific client");
         itemClearChatMessages.setFont(itemFont);
         itemClearChatMessages.setToolTipText("Click here to clear all chat messages from the textarea");
-        itemSelectReceiver.setFont(itemFont);
-        itemSelectReceiver.setToolTipText("Click here to select receiver");
-        itemStartReceivingAccessibilityEvents.setFont(itemFont);
-        itemStopReceivingAccessibilityEvents.setFont(itemFont);
-        itemSetEditText.setFont(itemFont);
-        itemAppendEditText.setFont(itemFont);
-        itemKeepDeviceAwakeBackground.setFont(itemFont);
-        itemKeepDeviceAwakeThisWindowOnly.setFont(itemFont);
         itemAbout.setFont(itemFont);
         menuOptions.setFont(menuFont);
         menuSettings.setFont(menuFont);
@@ -204,13 +185,6 @@ public class ChatClientView extends JFrame {
         menuOptions.add(itemExitProgram);
         menuOptions.add(itemSendMsgSpecificClient);
         menuOptions.add(itemClearChatMessages);
-        menuOptions.add(itemSelectReceiver);
-        //menuOptions.add(itemStartReceivingAccessibilityEvents);
-        //menuOptions.add(itemStopReceivingAccessibilityEvents);
-        //menuOptions.add(itemSetEditText);
-        //menuOptions.add(itemAppendEditText);
-        //menuOptions.add(itemKeepDeviceAwakeBackground);
-        //menuOptions.add(itemKeepDeviceAwakeThisWindowOnly);
         menuAbout.add(itemAbout);
         mainMenuBar.add(menuOptions);
         mainMenuBar.add(menuSettings);
@@ -232,13 +206,6 @@ public class ChatClientView extends JFrame {
 
     public void addListeners(ActionListener listener){
         itemAbout.addActionListener(listener);
-        itemSelectReceiver.addActionListener(listener);
-        itemStartReceivingAccessibilityEvents.addActionListener(listener);
-        itemStopReceivingAccessibilityEvents.addActionListener(listener);
-        itemSetEditText.addActionListener(listener);
-        itemAppendEditText.addActionListener(listener);
-        itemKeepDeviceAwakeBackground.addActionListener(listener);
-        itemKeepDeviceAwakeThisWindowOnly.addActionListener(listener);
         itemExitProgram.addActionListener(listener);
         itemSendMsgSpecificClient.addActionListener(listener);
         itemClearChatMessages.addActionListener(listener);
@@ -452,13 +419,6 @@ public class ChatClientView extends JFrame {
         this.itemClearChatMessages = itemClearChatMessages;
     }
 
-    public JMenuItem getItemSelectReceiver() {
-        return itemSelectReceiver;
-    }
-
-    public void setItemSelectReceiver(JMenuItem itemSelectReceiver) {
-        this.itemSelectReceiver = itemSelectReceiver;
-    }
 
     public JButton getBtnDisconnectFromServer() {
         return btnDisconnectFromServer;
@@ -504,61 +464,6 @@ public class ChatClientView extends JFrame {
         this.itemSendMsgSpecificClient = itemSendMsgSpecificClient;
     }
 
-    public JMenuItem getitemSelectReceiver() {
-        return itemSelectReceiver;
-    }
-
-    public void setitemSelectReceiver(JMenuItem itemSelectReceiver) {
-        this.itemSelectReceiver = itemSelectReceiver;
-    }
-
-    public JMenuItem getItemStartReceivingAccessibilityEvents() {
-        return itemStartReceivingAccessibilityEvents;
-    }
-
-    public void setItemStartReceivingAccessibilityEvents(JMenuItem itemStartReceivingAccessibilityEvents) {
-        this.itemStartReceivingAccessibilityEvents = itemStartReceivingAccessibilityEvents;
-    }
-
-    public JMenuItem getItemStopReceivingAccessibilityEvents() {
-        return itemStopReceivingAccessibilityEvents;
-    }
-
-    public void setItemStopReceivingAccessibilityEvents(JMenuItem itemStopReceivingAccessibilityEvents) {
-        this.itemStopReceivingAccessibilityEvents = itemStopReceivingAccessibilityEvents;
-    }
-
-    public JMenuItem getItemSetEditText() {
-        return itemSetEditText;
-    }
-
-    public void setItemSetEditText(JMenuItem itemSetEditText) {
-        this.itemSetEditText = itemSetEditText;
-    }
-
-    public JMenuItem getItemAppendEditText() {
-        return itemAppendEditText;
-    }
-
-    public void setItemAppendEditText(JMenuItem itemAppendEditText) {
-        this.itemAppendEditText = itemAppendEditText;
-    }
-
-    public JCheckBoxMenuItem getItemKeepDeviceAwakeBackground() {
-        return itemKeepDeviceAwakeBackground;
-    }
-
-    public void setItemKeepDeviceAwakeBackground(JCheckBoxMenuItem itemKeepDeviceAwakeBackground) {
-        this.itemKeepDeviceAwakeBackground = itemKeepDeviceAwakeBackground;
-    }
-
-    public JCheckBoxMenuItem getItemKeepDeviceAwakeThisWindowOnly() {
-        return itemKeepDeviceAwakeThisWindowOnly;
-    }
-
-    public void setItemKeepDeviceAwakeThisWindowOnly(JCheckBoxMenuItem itemKeepDeviceAwakeThisWindowOnly) {
-        this.itemKeepDeviceAwakeThisWindowOnly = itemKeepDeviceAwakeThisWindowOnly;
-    }
 
     public JMenuItem getItemAbout() {
         return itemAbout;
