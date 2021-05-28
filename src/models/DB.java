@@ -62,15 +62,15 @@ public class DB {
                         + "ID int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                         + "USERNAME varchar(255) DEFAULT NULL,"
                         + "PASSWORD varchar(255) DEFAULT NULL,"
-                        + "ADMIN varchar(255) DEFAULT NULL,"
-                        + "FIRST_NAME varchar(255) DEFAULT NULL,"
-                        + "LAST_NAME varchar(255) DEFAULT NULL,"
-                        + "CREATED_AT varchar(255) DEFAULT NULL,"
-                        + "ACCOUNT_ID varchar(255) DEFAULT NULL)";
+                        + "ADMIN varchar(255) DEFAULT NULL)";
+                        //+ "FIRST_NAME varchar(255) DEFAULT NULL,"
+                        //+ "LAST_NAME varchar(255) DEFAULT NULL,"
+                        //+ "CREATED_AT DATE DEFAULT NULL,"
+                        //+ "ACCOUNT_ID int DEFAULT NULL)";
                 String create_connections_table="CREATE TABLE connections ("
                         + "ID int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                         + "IP_ADDRESS varchar(255) DEFAULT NULL,"
-                        + "DATE_TIME varchar(255) DEFAULT NULL)";
+                        + "DATE_TIME DATE DEFAULT NULL)";
                 String create_chat_messages_table="CREATE TABLE chatmessages ("
                         + "ID int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                         + "SENDER varchar(255) DEFAULT NULL,"
