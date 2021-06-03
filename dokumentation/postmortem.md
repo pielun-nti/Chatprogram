@@ -46,7 +46,7 @@ Det var några funktioner som jag inte hann lägga till på grund av mycket anna
 * Göra så att servern kan skicka meddelanden till alla klienter samt specifik klient.
 * Gör så att klienten får en varningsdialogruta om klienten försöker skicka ett meddelande till en annan klient som inte är ansluten till servern just nu, men att dialogrutan också säger att klienten som inte är ansluten just nu kommer kunna se meddelandet sen när den ansluter till servern. Tillåt att skicka meddelanden till oanslutna klienter, men kolla så att användarnamnet finns i databasen under users, annars neka.
 
-Jag har använt en dator med IntelliJ och det är där jag skrivit koden. Jag har använt keytool-kommandot i terminalen för att skapa ett jks certifikat/keystore. Den keystoren har jag sedan använt för att kryptera nätverkstrafiken.
+Jag har använt en dator med IntelliJ och det är där jag skrivit koden. Jag har använt keytool-kommandot i terminalen för att skapa ett jks certifikat/keystore. Den keystoren har jag sedan använt för att kryptera nätverkstrafiken. Jag har använt en MySQL connector för java jar fil för att prata med databasen.
 
 ## Positiva erfarenheter
 Allt med arbetet gick bra tycker jag, även fast jag inte hann lägga till alla de funktioner som jag tänkt. Men jag hann de flesta. Jag lärde mig hur man lägger till bilder i JTextPane via html då man har en sökväg. Det mesta andra visste jag redan sedan innan, men det var ett roligt projekt.
