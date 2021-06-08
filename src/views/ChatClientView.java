@@ -88,7 +88,7 @@ public class ChatClientView extends JFrame {
                     getClass().getResource("./img/logo.png"));
             setIconImage(logo);
             resizedLogo = resize(logo, 40, 40);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

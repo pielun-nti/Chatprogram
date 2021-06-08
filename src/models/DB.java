@@ -74,7 +74,9 @@ public class DB {
                 String create_chat_messages_table="CREATE TABLE chatmessages ("
                         + "ID int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                         + "SENDER varchar(255) DEFAULT NULL,"
-                        + "BODY varchar(255) DEFAULT NULL,"
+                        + "BODY varchar(8000) DEFAULT NULL,"
+                        + "RECEIVER varchar(255) DEFAULT NULL,"
+                        + "IMG_BASE64 text DEFAULT NULL,"
                         + "DATE_TIME varchar(255) DEFAULT NULL)";
 
                 s = connection.createStatement();

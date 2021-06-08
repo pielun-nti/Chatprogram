@@ -55,7 +55,7 @@ public class LoginView extends JFrame {
                     getClass().getResource("../views/img/logo.png"));
             frame.setIconImage(logo);
             BufferedImage resizedLogo = resize(logo, 40, 40);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -135,8 +135,18 @@ public class ChatClientModel {
         try {
             final char[] password = Env.SSLKeyStorePass.toCharArray();
 
-            final KeyStore keyStore = KeyStore.getInstance(new File(Env.SSLKeyStore), password);
-
+            //final KeyStore keyStore = KeyStore.getInstance(new File(Env.SSLKeyStore), password);
+            //final KeyStore keyStore = KeyStore.getInstance(Env.SSLKeyStore, String.valueOf(password));
+            final KeyStore keyStore = KeyStore.getInstance("JKS");
+            java.io.FileInputStream fis = null;
+            try {
+                fis = new java.io.FileInputStream(Env.SSLKeyStore);
+                keyStore.load(fis, password);
+            } finally {
+                if (fis != null) {
+                    fis.close();
+                }
+            }
             final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init(keyStore);
 
