@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact name="MainClient:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MainClient_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Chatprogram.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/ClientMF/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Chatprogram" />
+      </element>
+      <element id="library" level="project" name="mysql-connector-java-8.0.23" />
+    </root>
+  </artifact>
+</component>
