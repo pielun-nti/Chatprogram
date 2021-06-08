@@ -2,12 +2,16 @@ package models;
 
 
 import config.Env;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Enumeration;
+import java.util.Properties;
 
 public class DB {
     static Connection connection;
@@ -23,7 +27,68 @@ public class DB {
         DB.connection = connection;
     }
 
+    public boolean loadConfig(){
+        Properties config = new Properties();
+        boolean mysqlUserLoaded = false;
+        boolean mysqlPassLoaded = false;
+        boolean mysqlDbLoaded = false;
+        boolean mysqlPortLoaded = false;
+        try {
+            config.load(new FileInputStream("config.cfg"));
+            Enumeration<Object> en = config.keys();
+            while (en.hasMoreElements()) {
+                String key = (String) en.nextElement();
+                /**
+                 * MYSQL_USERNAME=
+                 * MYSQL_PASSWORD=
+                 * MYSQL_DATABASE_NAME=
+                 * MYSQL_PORT=
+                 */
+                if (key.equals("MYSQL_USERNAME")) {
+                    Env.user = (String) config.get(key);
+                    if (!Env.user.trim().equals("")) {
+                        mysqlUserLoaded = true;
+                    }
+                }
+                if (key.equals("MYSQL_PASSWORD")) {
+                    Env.pass = (String) config.get(key);
+                    if (!Env.pass.trim().equals("")) {
+                        mysqlPassLoaded = true;
+                    }
+                }
+                if (key.equals("MYSQL_DATABASE_NAME")){
+                    Env.dbName = (String) config.get(key);
+                    if (!Env.dbName.trim().equals("")) {
+                        mysqlDbLoaded = true;
+                    }
+                }
+                if (key.equals("MYSQL_PORT")){
+                    String mysqlport = (String)config.get(key);
+                    Env.port = mysqlport;
+                    if (!mysqlport.trim().equals("")) {
+                        mysqlPortLoaded = true;
+                    }
+                }
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
+        if (mysqlDbLoaded & mysqlPassLoaded & mysqlPortLoaded & mysqlUserLoaded){
+            Env.conURL = "jdbc:mysql://localhost:" + Env.port + "/" + Env.dbName + "?characterEncoding=latin1";
+            System.out.println("Set con url: " + Env.conURL);
+            return true;
+        }
+        return false;
+    }
+
     public boolean initDB(){
+        if (!loadConfig()){
+            JOptionPane.showMessageDialog(null, "Error loading config. Fill in mysql properties in config.cfg file.", Env.DBMessageBoxTitle, JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         boolean success = true;
 
         String driverName = Env.driverName;
